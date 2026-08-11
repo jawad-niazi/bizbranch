@@ -1,0 +1,28 @@
+[
+    {
+        "name": "borjan",
+        "location": "rahman boys hostel gulghast multan",
+        "city": "Multan",
+        "category": "shoes",
+        "rating": "5.0",
+        "reviews_count": "0",
+        "logo": "uploads\/1786433155_na7.jpeg",
+        "phone": "39329384889348",
+        "whatsapp": "",
+        "email": "jkniazi372@gmail.com",
+        "website": "htttp:\/\/example.com",
+        "facebook": "http:\/\/facebook\/jawad",
+        "instagram": "http:\/\/instagram\/jawad",
+        "twitter": "http:\/\/twitter\/jawad",
+        "contact_person": "Jk Niazi",
+        "owner": {
+            "name": "",
+            "designation": "",
+            "photo": "",
+            "intro": "",
+            "location": ""
+        },
+        "about_text": "best shoes ever",
+        "reviews": []
+    }
+]

@@ -1,9 +1,21 @@
 <?php
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Mock database for dynamic routing
-$businesses = [
-    1 => [
+$data_file = 'data/businesses.json';
+$all_businesses = [];
+if (file_exists($data_file)) {
+    $all_businesses = json_decode(file_get_contents($data_file), true) ?? [];
+}
+
+if (isset($all_businesses[$id])) {
+    $business = $all_businesses[$id];
+    $business['hero_image'] = $business['hero_image'] ?? 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80';
+    $business['reviews'] = $business['reviews'] ?? [];
+    $business['reviews_count'] = $business['reviews_count'] ?? '0';
+    $business['rating'] = $business['rating'] ?? '5.0';
+} else {
+    // Fallback for demo purposes if ID doesn't exist
+    $business = [
         'name' => 'Aura Elite Wellness & Spa',
         'location' => '74 Pall Mall, Mayfair, London',
         'category' => 'Luxury Day Spa',
@@ -26,11 +38,8 @@ $businesses = [
             ['name' => 'Justine Namer', 'initials' => 'JN', 'date' => 'Oct 12, 2024', 'rating' => 5, 'text' => 'Exceptional service and extremely tranquil atmosphere. Highly recommended!'],
             ['name' => 'Lisa Rame', 'initials' => 'LR', 'date' => 'Oct 10, 2024', 'rating' => 5, 'text' => 'Pure luxury! The facilities are spotless and the staff is very professional.']
         ]
-    ]
-];
-
-// Fallback for demo purposes
-$business = $businesses[$id] ?? $businesses[1];
+    ];
+}
 
 $recently_added = [
     ['name' => 'Serenity Spa', 'category' => 'Wellness', 'image' => 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=600&q=80'],
@@ -332,6 +341,7 @@ $similar_businesses = [
           </div>
 
           <!-- Business Owner Profile Card -->
+          <?php if (!empty($business['owner']['name'])): ?>
           <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
             <h3 class="text-lg font-bold text-slate-900 mb-5 border-b border-slate-100 pb-4 flex items-center">
               <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
@@ -355,6 +365,7 @@ $similar_businesses = [
               </div>
             </div>
           </div>
+          <?php endif; ?>
 
           <!-- Contact & Location Card -->
           <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">

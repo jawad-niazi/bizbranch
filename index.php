@@ -55,68 +55,68 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Listing 1 -->
-            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-                <div class="h-48 bg-gray-200 relative">
-                    <img src="https://images.unsplash.com/photo-1600334129128-68505d48fc36?auto=format&fit=crop&q=80&w=600" alt="Spa" class="w-full h-full object-cover">
-                    <span class="absolute top-4 left-4 bg-white px-3 py-1 text-xs font-bold rounded-full text-teal">Beauty</span>
+            <?php
+            $data_file = 'data/businesses.json';
+            $businesses = [];
+            if (file_exists($data_file)) {
+                $businesses = json_decode(file_get_contents($data_file), true) ?? [];
+            }
+
+            if (empty($businesses)):
+            ?>
+                <!-- Empty State -->
+                <div class="col-span-1 md:col-span-3 text-center py-16 bg-white rounded-xl border border-gray-100 shadow-sm">
+                    <div class="w-20 h-20 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H7"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">No businesses listed yet</h3>
+                    <p class="text-gray-500 mb-6">Be the first to add your business to our growing directory.</p>
+                    <a href="add-business.php" class="inline-block bg-teal-600 hover:bg-teal-700 text-white rounded-xl px-6 py-3 font-medium transition-all shadow-md shadow-teal-500/20">
+                        Add Your Business Free
+                    </a>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2">Serenity Spa & Wellness</h3>
-                    <p class="text-sm text-gray-500 mb-4 flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                        Los Angeles, CA
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center text-yellow-400">
-                            ★ ★ ★ ★ ★ <span class="text-gray-500 text-xs ml-1">(5)</span>
+            <?php else: ?>
+                <?php for ($i = count($businesses) - 1; $i >= max(0, count($businesses) - 6); $i--): 
+                    $biz = $businesses[$i];
+                    $logo = !empty($biz['logo']) ? htmlspecialchars($biz['logo']) : '';
+                    $category = htmlspecialchars($biz['category'] ?? 'Business');
+                    $name = htmlspecialchars($biz['name'] ?? 'Unnamed Business');
+                    $location = htmlspecialchars($biz['city'] ?? $biz['location'] ?? 'Unknown Location');
+                    $rating = htmlspecialchars($biz['rating'] ?? '5.0');
+                    $reviews_count = htmlspecialchars($biz['reviews_count'] ?? '0');
+                ?>
+                <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
+                    <div class="h-48 bg-gray-100 relative">
+                        <?php if($logo): ?>
+                        <img src="<?= $logo ?>" alt="<?= $name ?>" class="w-full h-full object-cover">
+                        <?php else: ?>
+                        <div class="w-full h-full flex items-center justify-center text-gray-300">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         </div>
-                        <a href="/business-detail.php?id=1" class="text-teal font-medium text-sm hover:underline">View Details</a>
+                        <?php endif; ?>
+                        <span class="absolute top-4 left-4 bg-white px-3 py-1 text-xs font-bold rounded-full text-teal-600 shadow-sm"><?= $category ?></span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-900 truncate"><?= $name ?></h3>
+                        <p class="text-sm text-gray-500 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                            <?= $location ?>
+                        </p>
+                        <div class="flex items-center justify-between mt-auto">
+                            <div class="flex items-center text-yellow-400">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                <span class="ml-1 text-sm font-bold text-gray-700"><?= $rating ?></span> 
+                                <span class="text-gray-400 text-xs ml-1">(<?= $reviews_count ?>)</span>
+                            </div>
+                            <a href="business-detail.php?id=<?= $i ?>" class="text-teal-600 font-bold text-sm hover:text-teal-800 flex items-center">
+                                View Details
+                                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Listing 2 -->
-            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-                <div class="h-48 bg-gray-200 relative">
-                    <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=600" alt="Restaurant" class="w-full h-full object-cover">
-                    <span class="absolute top-4 left-4 bg-white px-3 py-1 text-xs font-bold rounded-full text-teal">Restaurant</span>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2">The Golden Fork</h3>
-                    <p class="text-sm text-gray-500 mb-4 flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                        New York, NY
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center text-yellow-400">
-                            ★ ★ ★ ★ ☆ <span class="text-gray-500 text-xs ml-1">(12)</span>
-                        </div>
-                        <a href="/business-detail.php?id=2" class="text-teal font-medium text-sm hover:underline">View Details</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Listing 3 -->
-            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-                <div class="h-48 bg-gray-200 relative">
-                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=600" alt="Real Estate" class="w-full h-full object-cover">
-                    <span class="absolute top-4 left-4 bg-white px-3 py-1 text-xs font-bold rounded-full text-teal">Real Estate</span>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2">Prime Properties Group</h3>
-                    <p class="text-sm text-gray-500 mb-4 flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                        Miami, FL
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center text-yellow-400">
-                            ★ ★ ★ ★ ★ <span class="text-gray-500 text-xs ml-1">(8)</span>
-                        </div>
-                        <a href="/business-detail.php?id=3" class="text-teal font-medium text-sm hover:underline">View Details</a>
-                    </div>
-                </div>
-            </div>
+                <?php endfor; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>
