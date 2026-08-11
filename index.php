@@ -20,7 +20,7 @@ $landing_categories = [
     [
         'name' => 'Auto',
         'subs' => ['Towing Services', 'Car Rental'],
-        'image' => 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=600&q=80'
+        'image' => 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80'
     ],
     [
         'name' => 'Financial',
@@ -46,13 +46,13 @@ $landing_categories = [
 ?>
 
 <!-- Hero Section -->
-<section class="relative bg-teal-dark overflow-hidden rounded-b-[40px]">
+<section class="relative bg-teal-dark overflow-hidden">
     <!-- Gradient Overlay -->
     <div class="absolute inset-0 bg-gradient-to-r from-teal-dark to-teal mix-blend-multiply opacity-90 z-10"></div>
     <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 z-0"></div>
     
     <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 drop-shadow-md">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-md">
             BizBranches: Free US Business Directory
         </h1>
         <p class="text-lg md:text-xl text-teal-50 mb-8 max-w-2xl mx-auto">
@@ -95,7 +95,7 @@ $landing_categories = [
 <section class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">Recent Listings</h2>
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Recent Listings</h2>
             <p class="text-gray-600">Discover some of the latest additions to the BizBranches directory.</p>
         </div>
         
@@ -130,7 +130,7 @@ $landing_categories = [
                     $rating = htmlspecialchars($biz['rating'] ?? '5.0');
                     $reviews_count = htmlspecialchars($biz['reviews_count'] ?? '0');
                 ?>
-                <div class="business-card bg-white border border-slate-200/80 rounded-[28px] p-3.5 space-y-3 flex flex-col justify-between group shadow-sm hover:shadow-md transition">
+                <div class="listing-card bg-white border border-slate-200/80 rounded-[28px] p-3.5 space-y-3 flex flex-col justify-between group shadow-sm hover:shadow-md transition">
                     <div>
                         <!-- 1. TOP IMAGE BLOCK WITH FLOATING PILL BADGES -->
                         <div class="relative h-44 w-full rounded-[20px] overflow-hidden bg-slate-100 border border-slate-100">
@@ -191,7 +191,7 @@ $landing_categories = [
                     About Us
                 </span>
                 
-                <h2 class="font-serif text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">
                     Connecting Communities with Local Businesses
                 </h2>
                 
@@ -255,7 +255,7 @@ $landing_categories = [
 
           <div class="flex flex-wrap gap-1">
             <?php foreach (array_slice($cat['subs'], 0, 3) as $sub): ?>
-              <span class="px-2.5 py-1 rounded-lg bg-white/20 backdrop-blur-md border border-white/20 text-white text-[10px] font-semibold">
+              <span class="px-2 py-0.5 rounded-md bg-white/20 backdrop-blur-md border border-white/20 text-white text-[10px] font-semibold">
                 <?php echo htmlspecialchars($sub); ?>
               </span>
             <?php endforeach; ?>
@@ -270,27 +270,95 @@ $landing_categories = [
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">Discover Businesses in Top US Cities</h2>
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Discover Businesses in Top US Cities</h2>
             <p class="text-gray-600">Explore the best local spots across major cities.</p>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <a href="#" class="p-6 border border-gray-100 rounded-xl hover:shadow-md transition-shadow group">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal transition-colors">New York</h3>
-                <p class="text-sm text-gray-500 mt-1">1,250 Businesses</p>
-            </a>
-            <a href="#" class="p-6 border border-gray-100 rounded-xl hover:shadow-md transition-shadow group">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal transition-colors">Los Angeles</h3>
-                <p class="text-sm text-gray-500 mt-1">980 Businesses</p>
-            </a>
-            <a href="#" class="p-6 border border-gray-100 rounded-xl hover:shadow-md transition-shadow group">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal transition-colors">Chicago</h3>
-                <p class="text-sm text-gray-500 mt-1">740 Businesses</p>
-            </a>
-            <a href="#" class="p-6 border border-gray-100 rounded-xl hover:shadow-md transition-shadow group">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal transition-colors">Houston</h3>
-                <p class="text-sm text-gray-500 mt-1">620 Businesses</p>
-            </a>
+        <style>
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        </style>
+        
+        <div class="relative group max-w-6xl mx-auto">
+            <!-- Carousel Container -->
+            <div id="city-carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 pt-4 px-4 scrollbar-hide items-stretch">
+                
+                <!-- New York -->
+                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
+                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H7"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">New York</h3>
+                    <p class="text-sm text-[#718096] mt-1.5 font-medium">1,250 Businesses</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </a>
+
+                <!-- Los Angeles -->
+                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
+                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Los Angeles</h3>
+                    <p class="text-sm text-[#718096] mt-1.5 font-medium">980 Businesses</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </a>
+
+                <!-- Chicago -->
+                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
+                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16M3 15h14M3 10h18M3 20h8"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Chicago</h3>
+                    <p class="text-sm text-[#718096] mt-1.5 font-medium">740 Businesses</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </a>
+
+                <!-- Houston -->
+                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
+                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Houston</h3>
+                    <p class="text-sm text-[#718096] mt-1.5 font-medium">620 Businesses</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </a>
+
+                <!-- Miami -->
+                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
+                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Miami</h3>
+                    <p class="text-sm text-[#718096] mt-1.5 font-medium">510 Businesses</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </a>
+
+                <!-- Seattle -->
+                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
+                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8h14v8a4 4 0 01-4 4H7a4 4 0 01-4-4V8zM17 10h1a3 3 0 013 3v1a3 3 0 01-3 3h-1M8 3h4M10 3v4"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Seattle</h3>
+                    <p class="text-sm text-[#718096] mt-1.5 font-medium">430 Businesses</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </a>
+
+            </div>
+
+            <!-- Navigation Arrows -->
+            <button onclick="document.getElementById('city-carousel').scrollBy({left: -300, behavior: 'smooth'})" class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-2 md:-translate-x-6 bg-white shadow-lg rounded-full p-2.5 text-teal opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 hover:bg-teal hover:text-white border border-slate-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button onclick="document.getElementById('city-carousel').scrollBy({left: 300, behavior: 'smooth'})" class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-2 md:translate-x-6 bg-white shadow-lg rounded-full p-2.5 text-teal opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 hover:bg-teal hover:text-white border border-slate-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+            
+            <!-- Indicators -->
+            <div class="flex justify-center items-center gap-2 mt-4">
+                <div class="w-6 h-1.5 rounded-full bg-teal"></div>
+                <div class="w-2 h-1.5 rounded-full bg-slate-200"></div>
+                <div class="w-2 h-1.5 rounded-full bg-slate-200"></div>
+            </div>
         </div>
     </div>
 </section>
@@ -299,7 +367,7 @@ $landing_categories = [
 <section class="py-20 bg-gray-50 border-t border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">How It <span class="text-teal">Works</span></h2>
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">How It <span class="text-teal">Works</span></h2>
             <p class="text-gray-600">Connect with local businesses in three simple steps.</p>
         </div>
         
@@ -336,7 +404,7 @@ $landing_categories = [
 <!-- Newsletter Section -->
 <section class="py-20 bg-teal text-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
-        <h2 class="text-3xl font-serif font-bold mb-4">Join our newsletter</h2>
+        <h2 class="text-3xl font-extrabold mb-4">Join our newsletter</h2>
         <p class="mb-8 text-teal-100">Get the latest business listings and updates delivered straight to your inbox.</p>
         <form class="flex flex-col sm:flex-row gap-2 justify-center max-w-lg mx-auto">
             <input type="email" placeholder="Enter your email address" class="px-6 py-3 rounded-full text-gray-900 focus:outline-none flex-1">
@@ -349,7 +417,7 @@ $landing_categories = [
 <section class="py-20 bg-white">
     <div class="max-w-3xl mx-auto px-4">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">Frequently Asked <span class="text-teal">Questions</span></h2>
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Frequently Asked <span class="text-teal">Questions</span></h2>
             <p class="text-gray-600">Find answers to common questions about BizBranches.</p>
         </div>
         

@@ -5,7 +5,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 border-b border-gray-800 pb-12">
             <div class="col-span-1 md:col-span-2">
-                <h3 class="text-white text-2xl font-serif font-bold mb-4">BizBranches</h3>
+                <h3 class="text-white text-2xl font-extrabold mb-4 tracking-tight">BizBranches</h3>
                 <p class="text-sm text-gray-400 mb-6 max-w-sm">
                     US free business listing directory. Find local businesses across the United States. Add your business free, read reviews, and get contact details.
                 </p>
@@ -34,7 +34,12 @@
                     <li><a href="#" class="hover:text-teal transition-colors">All Cities</a></li>
                     <li><a href="/add-business.php" class="hover:text-teal transition-colors">List Your Business</a></li>
                     <li><a href="#" class="hover:text-teal transition-colors">About Us</a></li>
-                    <li><a href="#" class="hover:text-teal transition-colors">Contact</a></li>
+                    <li class="pt-2">
+                        <a href="mailto:support@bizbranches.com" class="flex items-center gap-2 text-gray-400 hover:text-teal transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            support@bizbranches.com
+                        </a>
+                    </li>
                 </ul>
             </div>
             

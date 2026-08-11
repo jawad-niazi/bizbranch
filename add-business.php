@@ -91,58 +91,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Add Your Business Free - BizBranches</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #0F172A; }
-    .card-white { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .input-field {
-      width: 100%;
-      padding: 0.625rem 0.875rem;
-      border-radius: 0.75rem;
-      border: 1px solid #CBD5E1;
-      background-color: #FFFFFF;
-      font-size: 0.8125rem;
-      color: #0F172A;
-      transition: all 0.2s ease;
-    }
-    .input-field:focus {
-      outline: none;
-      border-color: #2563EB;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-    .label-title { font-size: 0.75rem; font-weight: 700; color: #334155; margin-bottom: 0.375rem; display: block; }
-  </style>
-</head>
-<body class="min-h-screen flex flex-col justify-between">
+<?php include 'components/header.php'; ?>
+<style>
+  .card-white { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .input-field {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.75rem;
+    border: 1px solid #CBD5E1;
+    background-color: #FFFFFF;
+    font-size: 0.8125rem;
+    color: #0F172A;
+    transition: all 0.2s ease;
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: #368997;
+    box-shadow: 0 0 0 3px rgba(54, 137, 151, 0.1);
+  }
+  .label-title { font-size: 0.75rem; font-weight: 700; color: #334155; margin-bottom: 0.375rem; display: block; }
+</style>
 
-  <!-- Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="index.php" class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white tracking-wider">BB</div>
-        <span class="font-extrabold text-xl text-slate-900 tracking-tight">BizBranches</span>
-      </a>
-      <nav class="hidden md:flex space-x-8 text-sm font-semibold text-slate-600">
-        <a href="index.php" class="hover:text-blue-600 transition">Home</a>
-        <a href="#" class="hover:text-blue-600 transition">Categories</a>
-        <a href="#" class="hover:text-blue-600 transition">Our directories</a>
-      </nav>
-      <div class="flex items-center space-x-3">
-        <a href="#" class="bg-blue-50 text-blue-700 font-semibold px-4 py-2 rounded-xl text-xs transition border border-blue-100">+ Add Free</a>
-        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition shadow-md shadow-blue-600/20">+ Add</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10 w-full">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 w-full">
     
     <div class="mb-8 space-y-2">
       <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Add Your Business Free</h1>
@@ -330,11 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
   </main>
 
-  <footer class="mt-16 bg-slate-900 text-white border-t border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-xs text-slate-500">
-      &copy; <?php echo date('Y'); ?> BizBranches. All rights reserved.
-    </div>
-  </footer>
+  <?php include 'components/footer.php'; ?>
 
   <script>
     const categoriesTree = <?= json_encode($categories_tree) ?>;

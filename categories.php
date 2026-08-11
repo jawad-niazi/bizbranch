@@ -87,62 +87,31 @@ $default_businesses = [
 $all_businesses = !empty($stored_businesses) ? array_merge($stored_businesses, $default_businesses) : $default_businesses;
 $preselected_category = $_GET['category'] ?? '';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Categories & Business Directory - BizBranches</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #0F172A; }
-    .card-white {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      transition: all 0.25s ease;
-    }
-    .filter-select {
-      background-color: #FFFFFF;
-      border: 1px solid #CBD5E1;
-      border-radius: 0.75rem;
-      padding: 0.625rem 0.875rem;
-      font-size: 0.8125rem;
-      color: #334155;
-      outline: none;
-      transition: all 0.2s;
-    }
-    .filter-select:focus {
-      border-color: #2563EB;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-  </style>
-</head>
-<body class="min-h-screen flex flex-col justify-between">
+<?php include 'components/header.php'; ?>
+<style>
+  .card-white {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: all 0.25s ease;
+  }
+  .filter-select {
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 1rem; /* 2xl rounded */
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+    color: #334155;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .filter-select:focus {
+    border-color: #368997;
+    box-shadow: 0 0 0 3px rgba(54, 137, 151, 0.1);
+  }
+</style>
 
-  <!-- Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="index.php" class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white tracking-wider">BB</div>
-        <span class="font-extrabold text-xl text-slate-900 tracking-tight">BizBranches</span>
-      </a>
-      <nav class="hidden md:flex space-x-8 text-sm font-semibold text-slate-600">
-        <a href="index.php" class="hover:text-blue-600 transition">Discover</a>
-        <a href="categories.php" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">Categories</a>
-        <a href="#" class="hover:text-blue-600 transition">Our Directories</a>
-      </nav>
-      <div class="flex items-center space-x-3">
-        <a href="add-business.php" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition shadow-md shadow-blue-600/20">
-          + Add Business
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Section -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 w-full">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 w-full">
 
     <!-- CENTERED FILTER CONTROL CARD WITH INTEGRATED SEARCH BAR -->
     <div class="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm space-y-6 text-center">
@@ -154,18 +123,18 @@ $preselected_category = $_GET['category'] ?? '';
       </div>
 
       <!-- Integrated Search Input & Reset Button Row -->
-      <div class="max-w-2xl mx-auto flex items-center gap-3">
+      <div class="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-3">
         <div class="relative w-full">
           <input 
             type="text" 
             id="search-input" 
-            placeholder="Search by business name, service, or keyword..." 
-            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition"
+            placeholder="Search by business name, city, service, or keyword..." 
+            class="w-full pl-11 pr-4 py-3 rounded-full bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-teal focus:bg-white focus:ring-4 focus:ring-teal/10 transition"
           />
           <svg class="w-4 h-4 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
 
-        <button id="reset-filters" class="text-xs text-slate-600 hover:text-blue-600 font-bold flex items-center gap-1.5 transition whitespace-nowrap px-4 py-3 rounded-2xl border border-slate-200 hover:border-blue-200 hover:bg-blue-50 bg-white">
+        <button id="reset-filters" class="w-full sm:w-auto text-xs text-slate-600 hover:text-teal font-bold flex justify-center items-center gap-1.5 transition whitespace-nowrap px-6 py-3 rounded-full border border-slate-200 hover:border-teal/30 hover:bg-teal/5 bg-white">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
           <span>Reset</span>
         </button>
@@ -281,13 +250,9 @@ $preselected_category = $_GET['category'] ?? '';
       </div>
     </section>
 
-  </main>
+  </div>
 
-  <footer class="mt-16 bg-slate-900 text-white border-t border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-xs text-slate-500">
-      &copy; <?php echo date('Y'); ?> BizBranches. All rights reserved.
-    </div>
-  </footer>
+  <?php include 'components/footer.php'; ?>
 
   <!-- JAVASCRIPT DEPENDENT DROPDOWN & REAL-TIME FILTERING -->
   <script>

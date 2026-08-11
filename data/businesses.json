@@ -24,5 +24,59 @@
         },
         "about_text": "best shoes ever",
         "reviews": []
+    },
+    {
+        "name": "car rental",
+        "location": "43par3,NewYork",
+        "city": "NewYork",
+        "category": "Auto",
+        "subcategory": "Car Rental",
+        "rating": "5.0",
+        "reviews_count": "0",
+        "logo": "uploads\/1786449181_2.jpeg",
+        "phone": "+123 39329384874",
+        "whatsapp": "",
+        "email": "jame@gmail.com",
+        "website": "htttp:\/\/rental.com",
+        "facebook": "http:\/\/facebook\/rental",
+        "instagram": "http:\/\/instagram\/rental",
+        "twitter": "http:\/\/twitter\/rental",
+        "contact_person": "Jame",
+        "owner": {
+            "name": "James Bond",
+            "designation": "",
+            "photo": "uploads\/1786449181_owner_shanks.jpeg",
+            "intro": "being blind is beautiful",
+            "location": "New York"
+        },
+        "about_text": "best car rental",
+        "reviews": []
+    },
+    {
+        "name": "Auora Pest Control",
+        "location": "street67,a4 losAngles",
+        "city": "Los Angeles",
+        "category": "Home Services",
+        "subcategory": "Pest Control",
+        "rating": "5.0",
+        "reviews_count": "0",
+        "logo": "uploads\/1786449953_about_us.jpg",
+        "phone": "+1(55) 274-44372",
+        "whatsapp": "",
+        "email": "aizen@gmail.com",
+        "website": "",
+        "facebook": "",
+        "instagram": "",
+        "twitter": "",
+        "contact_person": "Aizen",
+        "owner": {
+            "name": "",
+            "designation": "",
+            "photo": "",
+            "intro": "",
+            "location": ""
+        },
+        "about_text": "the best pest control sevice u'll ever know",
+        "reviews": []
     }
 ]
