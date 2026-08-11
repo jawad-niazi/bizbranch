@@ -15,21 +15,19 @@
 
 <!-- Navigation Bar -->
 <header class="bg-white shadow-md rounded-b-2xl sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <div class="flex items-center gap-8">
-            <a href="/" class="text-2xl font-serif font-bold text-teal">BizBranches</a>
-            
-            <nav class="hidden md:flex space-x-6 text-sm font-medium">
-                <a href="/" class="text-gray-600 hover:text-teal transition-colors">Home</a>
-                <a href="/categories.php" class="text-gray-600 hover:text-teal transition-colors">Categories</a>
-                <div class="relative group cursor-pointer">
-                    <span class="text-gray-600 hover:text-teal transition-colors flex items-center gap-1">
-                        Our directories 
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </span>
-                </div>
-            </nav>
-        </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
+        <a href="/" class="text-2xl font-serif font-bold text-teal">BizBranches</a>
+        
+        <nav class="hidden md:flex space-x-6 text-sm font-medium absolute left-1/2 -translate-x-1/2">
+            <a href="/" class="text-gray-600 hover:text-teal transition-colors">Home</a>
+            <a href="/categories.php" class="text-gray-600 hover:text-teal transition-colors">Categories</a>
+            <div class="relative group cursor-pointer">
+                <span class="text-gray-600 hover:text-teal transition-colors flex items-center gap-1">
+                    Our directories 
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </span>
+            </div>
+        </nav>
 
         <div class="flex items-center gap-4">
             <a href="/add-business.php" class="hidden md:inline-flex items-center justify-center px-4 py-2 border border-teal text-teal font-medium text-sm rounded-full hover:bg-teal hover:text-white transition-colors">

@@ -1,4 +1,36 @@
 <?php
+$categories_tree = [
+    'Home Services' => [
+        'Locksmith', 'Plumbing', 'Electrical', 'HVAC', 'Garage Door', 'Roofing',
+        'Appliance Repair', 'Pest Control', 'Solar', 'EV Charger Installation',
+        'Exterior Paint', 'Bath Remodeling', 'Kitchen Remodeling', 'Home Remodeling',
+        'Water Damage Restoration', 'Fire Damage Restoration', 'Windows',
+        'Lawn Care', 'Mold Removal', 'Home Security', 'Porta Potties'
+    ],
+    'Legal' => [
+        'Personal Injury Lawyers', 'Motor Vehicle Accident Lawyers (MVA)',
+        'Mass Torts', 'Immigration Lawyers', 'Criminal Defense / DUI Lawyers'
+    ],
+    'Insurance' => [
+        'Auto Insurance', 'Home Insurance', 'Life Insurance', 'Final Expense', 'ACA (Health Insurance)'
+    ],
+    'Auto' => [
+        'Towing Services', 'Car Rental'
+    ],
+    'Financial' => [
+        'Credit Repair', 'Debt Settlement', 'Tax Debt Relief', 'Personal Loans', 'Business Loans', 'Mortgage'
+    ],
+    'Travel' => [
+        'Flight Booking / Changes', 'Hotel Rental'
+    ],
+    'Medical' => [
+        'Medicare', 'Home Care / Caregivers', 'SSDI'
+    ],
+    'Telecom' => [
+        'Tv/Internet services'
+    ]
+];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data_file = 'data/businesses.json';
     $businesses = [];
@@ -29,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'location' => $_POST['full_address'] ?? '',
         'city' => $_POST['city'] ?? '',
         'category' => $_POST['category'] ?? '',
+        'subcategory' => $_POST['subcategory'] ?? '',
         'rating' => '5.0',
         'reviews_count' => '0',
         'logo' => $logo_path,
@@ -177,14 +210,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <h2 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">LOCATION & CATEGORY</h2>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="label-title">City <span class="text-rose-500">*</span></label>
             <input type="text" name="city" required placeholder="e.g. London" class="input-field" />
           </div>
           <div>
             <label class="label-title">Category <span class="text-rose-500">*</span></label>
-            <input type="text" name="category" required placeholder="e.g. Luxury Day Spa" class="input-field" />
+            <select name="category" id="category" required class="input-field">
+              <option value="">Select Category</option>
+              <?php foreach(array_keys($categories_tree) as $cat): ?>
+                <option value="<?= htmlspecialchars($cat) ?>"><?= htmlspecialchars($cat) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div>
+            <label class="label-title">Subcategory</label>
+            <select name="subcategory" id="subcategory" class="input-field disabled:bg-slate-50 disabled:text-slate-400" disabled>
+              <option value="">Select Subcategory</option>
+            </select>
           </div>
         </div>
 
@@ -292,5 +336,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </footer>
 
+  <script>
+    const categoriesTree = <?= json_encode($categories_tree) ?>;
+    const categorySelect = document.getElementById('category');
+    const subcategorySelect = document.getElementById('subcategory');
+
+    categorySelect.addEventListener('change', function() {
+      const selectedCat = this.value;
+      subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+      
+      if (selectedCat && categoriesTree[selectedCat]) {
+        categoriesTree[selectedCat].forEach(sub => {
+          const opt = document.createElement('option');
+          opt.value = sub;
+          opt.textContent = sub;
+          subcategorySelect.appendChild(opt);
+        });
+        subcategorySelect.disabled = false;
+      } else {
+        subcategorySelect.disabled = true;
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,7 +1,52 @@
 <?php include 'components/header.php'; ?>
+<?php
+// Landing Page Categories Data with HD CDN Background Images
+$landing_categories = [
+    [
+        'name' => 'Home Services',
+        'subs' => ['Locksmith', 'Plumbing', 'Electrical', 'HVAC', 'Garage Door', 'Roofing', 'Appliance Repair', 'Pest Control', 'Solar', 'EV Charger Installation', 'Exterior Paint', 'Bath Remodeling', 'Kitchen Remodeling', 'Home Remodeling', 'Water Damage Restoration', 'Fire Damage Restoration', 'Windows', 'Lawn Care', 'Mold Removal', 'Home Security', 'Porta Potties'],
+        'image' => 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80'
+    ],
+    [
+        'name' => 'Legal',
+        'subs' => ['Personal Injury Lawyers', 'Motor Vehicle Accident Lawyers (MVA)', 'Mass Torts', 'Immigration Lawyers', 'Criminal Defense / DUI Lawyers'],
+        'image' => 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80'
+    ],
+    [
+        'name' => 'Insurance',
+        'subs' => ['Auto Insurance', 'Home Insurance', 'Life Insurance', 'Final Expense', 'ACA (Health Insurance)'],
+        'image' => 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=600&q=80'
+    ],
+    [
+        'name' => 'Auto',
+        'subs' => ['Towing Services', 'Car Rental'],
+        'image' => 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=600&q=80'
+    ],
+    [
+        'name' => 'Financial',
+        'subs' => ['Credit Repair', 'Debt Settlement', 'Tax Debt Relief', 'Personal Loans', 'Business Loans', 'Mortgage'],
+        'image' => 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80'
+    ],
+    [
+        'name' => 'Travel',
+        'subs' => ['Flight Booking / Changes', 'Hotel Rental'],
+        'image' => 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80'
+    ],
+    [
+        'name' => 'Medical',
+        'subs' => ['Medicare', 'Home Care / Caregivers', 'SSDI'],
+        'image' => 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=600&q=80'
+    ],
+    [
+        'name' => 'Telecom',
+        'subs' => ['Tv/Internet services'],
+        'image' => 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80'
+    ],
+];
+?>
 
 <!-- Hero Section -->
-<section class="relative bg-teal-dark overflow-hidden">
+<section class="relative bg-teal-dark overflow-hidden rounded-b-[40px]">
     <!-- Gradient Overlay -->
     <div class="absolute inset-0 bg-gradient-to-r from-teal-dark to-teal mix-blend-multiply opacity-90 z-10"></div>
     <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 z-0"></div>
@@ -85,34 +130,44 @@
                     $rating = htmlspecialchars($biz['rating'] ?? '5.0');
                     $reviews_count = htmlspecialchars($biz['reviews_count'] ?? '0');
                 ?>
-                <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-                    <div class="h-48 bg-gray-100 relative">
-                        <?php if($logo): ?>
-                        <img src="<?= $logo ?>" alt="<?= $name ?>" class="w-full h-full object-cover">
-                        <?php else: ?>
-                        <div class="w-full h-full flex items-center justify-center text-gray-300">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        </div>
-                        <?php endif; ?>
-                        <span class="absolute top-4 left-4 bg-white px-3 py-1 text-xs font-bold rounded-full text-teal-600 shadow-sm"><?= $category ?></span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 text-gray-900 truncate"><?= $name ?></h3>
-                        <p class="text-sm text-gray-500 mb-4 flex items-center">
-                            <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                            <?= $location ?>
-                        </p>
-                        <div class="flex items-center justify-between mt-auto">
-                            <div class="flex items-center text-yellow-400">
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                                <span class="ml-1 text-sm font-bold text-gray-700"><?= $rating ?></span> 
-                                <span class="text-gray-400 text-xs ml-1">(<?= $reviews_count ?>)</span>
+                <div class="business-card bg-white border border-slate-200/80 rounded-[28px] p-3.5 space-y-3 flex flex-col justify-between group shadow-sm hover:shadow-md transition">
+                    <div>
+                        <!-- 1. TOP IMAGE BLOCK WITH FLOATING PILL BADGES -->
+                        <div class="relative h-44 w-full rounded-[20px] overflow-hidden bg-slate-100 border border-slate-100">
+                            <?php if($logo): ?>
+                            <img src="<?= $logo ?>" alt="<?= $name ?>" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <?php else: ?>
+                            <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
-                            <a href="business-detail.php?id=<?= $i ?>" class="text-teal-600 font-bold text-sm hover:text-teal-800 flex items-center">
-                                View Details
-                                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            </a>
+                            <?php endif; ?>
+                            
+                            <!-- Top-Left Category Badge -->
+                            <span class="absolute top-3 left-3 bg-white text-blue-600 font-extrabold text-[10px] px-3.5 py-1 rounded-full shadow-sm uppercase tracking-wider">
+                                <?= $category ?>
+                            </span>
+                            
+                            <!-- Top-Right Rating Badge -->
+                            <span class="absolute top-3 right-3 bg-white text-slate-800 font-extrabold text-[10px] px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                <span class="text-amber-400">★</span> <?= $rating ?>
+                            </span>
                         </div>
+    
+                        <!-- 2. CARD CONTENT (TITLE & LOCATION) -->
+                        <div class="px-1 pt-3 space-y-1">
+                            <h3 class="font-extrabold text-sm text-slate-900 group-hover:text-blue-600 transition truncate"><?= $name ?></h3>
+                            <p class="text-xs text-slate-500 font-medium flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                                <span class="truncate"><?= $location ?></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 3. BOTTOM DARK PILL BUTTON -->
+                    <div class="pt-1">
+                        <a href="business-detail.php?id=<?= $i ?>" class="w-full bg-[#111827] hover:bg-blue-600 text-white font-bold py-3 rounded-2xl text-xs text-center block transition shadow-sm">
+                            View Details
+                        </a>
                     </div>
                 </div>
                 <?php endfor; ?>
@@ -164,45 +219,51 @@
     </div>
 </section>
 
-<!-- Browse By Category Section -->
-<section class="py-20 bg-gray-50 border-t border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">Browse By Category</h2>
-            <p class="text-gray-600">Find exactly what you're looking for by browsing our popular categories.</p>
-        </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <a href="#" class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow text-center border border-gray-100 group">
-                <div class="w-16 h-16 mx-auto bg-teal-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-teal transition-colors">
-                    <svg class="w-8 h-8 text-teal group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-1">Shopping</h3>
-                <p class="text-sm text-gray-500">120 Listings</p>
-            </a>
-            <a href="#" class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow text-center border border-gray-100 group">
-                <div class="w-16 h-16 mx-auto bg-teal-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-teal transition-colors">
-                    <svg class="w-8 h-8 text-teal group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-1">Business</h3>
-                <p class="text-sm text-gray-500">85 Listings</p>
-            </a>
-            <a href="#" class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow text-center border border-gray-100 group">
-                <div class="w-16 h-16 mx-auto bg-teal-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-teal transition-colors">
-                    <svg class="w-8 h-8 text-teal group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-1">Education</h3>
-                <p class="text-sm text-gray-500">42 Listings</p>
-            </a>
-            <a href="#" class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow text-center border border-gray-100 group">
-                <div class="w-16 h-16 mx-auto bg-teal-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-teal transition-colors">
-                    <svg class="w-8 h-8 text-teal group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-1">Real Estate</h3>
-                <p class="text-sm text-gray-500">65 Listings</p>
-            </a>
-        </div>
+<!-- LANDING PAGE CATEGORY GRID -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Explore Top Categories</h2>
+      <p class="text-xs text-slate-500 mt-1">Find local specialists and verified business branches</p>
     </div>
+    <a href="categories.php" class="text-xs font-bold text-blue-600 hover:underline">
+      View All Categories &rarr;
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <?php foreach ($landing_categories as $cat): ?>
+      <a 
+        href="categories.php?category=<?php echo urlencode($cat['name']); ?>" 
+        class="group relative h-52 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 block"
+      >
+        <!-- CDN Background Image -->
+        <img 
+          src="<?php echo $cat['image']; ?>" 
+          alt="<?php echo htmlspecialchars($cat['name']); ?>" 
+          class="w-full h-full object-cover group-hover:scale-110 transition duration-500" 
+        />
+
+        <!-- Dark Gradient Overlay for Contrast -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
+
+        <!-- Content Overlay -->
+        <div class="absolute inset-0 p-5 flex flex-col justify-end text-white space-y-2">
+          <h3 class="font-extrabold text-lg text-white group-hover:text-blue-300 transition tracking-tight">
+            <?php echo htmlspecialchars($cat['name']); ?>
+          </h3>
+
+          <div class="flex flex-wrap gap-1">
+            <?php foreach (array_slice($cat['subs'], 0, 3) as $sub): ?>
+              <span class="px-2.5 py-1 rounded-lg bg-white/20 backdrop-blur-md border border-white/20 text-white text-[10px] font-semibold">
+                <?php echo htmlspecialchars($sub); ?>
+              </span>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </a>
+    <?php endforeach; ?>
+  </div>
 </section>
 
 <!-- Cities Section -->
