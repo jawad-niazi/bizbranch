@@ -279,70 +279,93 @@ $landing_categories = [
             .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         </style>
         
-        <div class="relative group max-w-6xl mx-auto">
+        <?php
+        $top_cities = [
+            [
+                'name' => 'New York',
+                'count' => '1,250 Businesses',
+                'image' => 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=600&q=80',
+                'tags' => ['Restaurants', 'Retail', 'Tech']
+            ],
+            [
+                'name' => 'Los Angeles',
+                'count' => '980 Businesses',
+                'image' => 'https://images.unsplash.com/photo-1515896769750-31548ea180d1?auto=format&fit=crop&w=600&q=80',
+                'tags' => ['Entertainment', 'Real Estate', 'Auto']
+            ],
+            [
+                'name' => 'Chicago',
+                'count' => '740 Businesses',
+                'image' => 'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?auto=format&fit=crop&w=600&q=80',
+                'tags' => ['Finance', 'Food', 'Legal']
+            ],
+            [
+                'name' => 'Houston',
+                'count' => '620 Businesses',
+                'image' => 'https://images.unsplash.com/photo-1531218150217-5afc50ba5151?auto=format&fit=crop&w=600&q=80',
+                'tags' => ['Energy', 'Medical', 'Manufacturing']
+            ],
+            [
+                'name' => 'Miami',
+                'count' => '510 Businesses',
+                'image' => 'https://images.unsplash.com/photo-1514214246283-d427a95c5d2f?auto=format&fit=crop&w=600&q=80',
+                'tags' => ['Tourism', 'Nightlife', 'Real Estate']
+            ],
+            [
+                'name' => 'Seattle',
+                'count' => '430 Businesses',
+                'image' => 'https://images.unsplash.com/photo-1502175353174-a7a70e73b362?auto=format&fit=crop&w=600&q=80',
+                'tags' => ['Tech', 'Coffee', 'Outdoors']
+            ],
+        ];
+        ?>
+        
+        <div class="relative group max-w-7xl mx-auto">
             <!-- Carousel Container -->
-            <div id="city-carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 pt-4 px-4 scrollbar-hide items-stretch">
-                
-                <!-- New York -->
-                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
-                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H7"></path></svg>
-                    </div>
-                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">New York</h3>
-                    <p class="text-sm text-[#718096] mt-1.5 font-medium">1,250 Businesses</p>
-                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                </a>
+            <div id="city-carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-8 pt-4 px-4 scrollbar-hide items-stretch">
+                <?php foreach ($top_cities as $city): ?>
+                <a href="categories.php?location=<?php echo urlencode($city['name']); ?>" class="group relative h-52 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 block min-w-[280px] sm:min-w-[300px] flex-shrink-0 snap-center">
+                    <!-- CDN Background Image -->
+                    <img 
+                      src="<?php echo $city['image']; ?>" 
+                      alt="<?php echo htmlspecialchars($city['name']); ?>" 
+                      class="w-full h-full object-cover group-hover:scale-110 transition duration-500" 
+                    />
 
-                <!-- Los Angeles -->
-                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
-                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
-                    </div>
-                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Los Angeles</h3>
-                    <p class="text-sm text-[#718096] mt-1.5 font-medium">980 Businesses</p>
-                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                </a>
+                    <!-- Dark Gradient Overlay for Contrast -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
 
-                <!-- Chicago -->
-                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
-                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16M3 15h14M3 10h18M3 20h8"></path></svg>
-                    </div>
-                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Chicago</h3>
-                    <p class="text-sm text-[#718096] mt-1.5 font-medium">740 Businesses</p>
-                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                </a>
+                    <!-- Content Overlay -->
+                    <div class="absolute inset-0 p-5 flex flex-col justify-end text-white space-y-2">
+                      <h3 class="font-extrabold text-2xl text-white group-hover:text-teal-300 transition tracking-tight">
+                        <?php echo htmlspecialchars($city['name']); ?>
+                      </h3>
+                      
+                      <div class="flex flex-wrap gap-1 mt-1">
+                        <span class="px-2 py-0.5 rounded-md bg-teal-600/80 backdrop-blur-md border border-teal-500/30 text-white text-[10px] font-semibold mb-1">
+                            <?php echo $city['count']; ?>
+                        </span>
+                      </div>
 
-                <!-- Houston -->
-                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
-                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                      <div class="flex flex-wrap gap-1">
+                        <?php foreach ($city['tags'] as $tag): ?>
+                          <span class="px-2 py-0.5 rounded-md bg-white/20 backdrop-blur-md border border-white/20 text-white text-[10px] font-semibold">
+                            <?php echo htmlspecialchars($tag); ?>
+                          </span>
+                        <?php endforeach; ?>
+                      </div>
                     </div>
-                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Houston</h3>
-                    <p class="text-sm text-[#718096] mt-1.5 font-medium">620 Businesses</p>
-                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                 </a>
+                <?php endforeach; ?>
 
-                <!-- Miami -->
-                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
-                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <!-- See More Card -->
+                <a href="categories.php?filter=location" class="group relative h-52 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 block min-w-[280px] sm:min-w-[300px] flex-shrink-0 snap-center bg-gradient-to-br from-teal-700 to-teal-900 flex flex-col items-center justify-center text-center p-6 border border-teal-600">
+                    <div class="bg-white/20 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                     </div>
-                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Miami</h3>
-                    <p class="text-sm text-[#718096] mt-1.5 font-medium">510 Businesses</p>
-                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <h3 class="font-extrabold text-xl text-white mb-2">See More Cities</h3>
+                    <p class="text-teal-100 text-sm">Filter businesses by location</p>
                 </a>
-
-                <!-- Seattle -->
-                <a href="#" class="relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden snap-center min-w-[260px] flex-shrink-0">
-                    <div class="mb-5 text-teal group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                        <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8h14v8a4 4 0 01-4 4H7a4 4 0 01-4-4V8zM17 10h1a3 3 0 013 3v1a3 3 0 01-3 3h-1M8 3h4M10 3v4"></path></svg>
-                    </div>
-                    <h3 class="font-bold text-xl text-[#2D3748] group-hover:text-teal transition-colors">Seattle</h3>
-                    <p class="text-sm text-[#718096] mt-1.5 font-medium">430 Businesses</p>
-                    <div class="absolute bottom-0 left-0 w-full h-1 bg-teal transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                </a>
-
             </div>
 
             <!-- Navigation Arrows -->
