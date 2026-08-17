@@ -3,7 +3,7 @@
 <!-- Page Header -->
 <section class="bg-teal-700 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-serif font-bold text-white">About BizBranches</h1>
+        <h1 class="text-4xl md:text-5xl font-bold text-white">About BizBranches</h1>
         <p class="text-teal-100 mt-4 text-lg max-w-2xl mx-auto">Learn more about our mission to connect local communities with the best businesses across the United States.</p>
     </div>
 </section>
@@ -14,7 +14,7 @@
         
         <!-- Our Mission -->
         <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 border border-gray-100">
-            <h2 class="text-2xl font-serif font-bold text-slate-900 mb-4 flex items-center">
+            <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center">
                 <span class="w-8 h-8 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center mr-3 text-sm">1</span>
                 Our Mission
             </h2>
@@ -25,7 +25,7 @@
 
         <!-- Coverage -->
         <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 border border-gray-100">
-            <h2 class="text-2xl font-serif font-bold text-slate-900 mb-4 flex items-center">
+            <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center">
                 <span class="w-8 h-8 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center mr-3 text-sm">2</span>
                 Extensive Coverage
             </h2>
@@ -54,7 +54,7 @@
 
         <!-- For Business Owners & Consumers -->
         <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 border border-gray-100">
-            <h2 class="text-2xl font-serif font-bold text-slate-900 mb-6 flex items-center">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center">
                 <span class="w-8 h-8 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center mr-3 text-sm">3</span>
                 Who We Serve
             </h2>
@@ -103,7 +103,7 @@
 <!-- Bottom CTA Banner -->
 <section class="bg-teal-900 py-16 text-center">
     <div class="max-w-3xl mx-auto px-4">
-        <h2 class="text-3xl font-serif font-bold text-white mb-4">Ready to grow your business?</h2>
+        <h2 class="text-3xl font-bold text-white mb-4">Ready to grow your business?</h2>
         <p class="text-teal-100 mb-8">Join thousands of business owners who are already reaching new customers every day. It only takes a minute.</p>
         <a href="/add-business.php" class="inline-flex items-center px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-full font-bold transition-all shadow-lg shadow-teal-900/50">
             List Your Business for Free

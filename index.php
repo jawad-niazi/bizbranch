@@ -62,24 +62,24 @@ $landing_categories = [
 
         
         <!-- Search Bar -->
-        <div class="max-w-4xl mx-auto bg-white rounded-full shadow-lg p-2 flex flex-col md:flex-row items-center gap-2">
-            <div class="flex-1 w-full flex items-center px-4 border-b md:border-b-0 md:border-r border-gray-200">
-                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                <input type="text" placeholder="Search businesses..." class="w-full py-3 focus:outline-none text-gray-700 bg-transparent">
+        <div class="max-w-4xl mx-auto bg-white rounded-full shadow-xl p-2 flex flex-col md:flex-row items-stretch gap-0">
+            <!-- Business Name -->
+            <div class="flex-1 flex items-center px-5 border-b md:border-b-0 md:border-r border-gray-100 py-1">
+                <svg class="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input id="hero-search-name" type="text" placeholder="Search businesses..." class="w-full focus:outline-none text-sm text-gray-700 bg-transparent py-2">
             </div>
-            <div class="flex-1 w-full flex items-center px-4 border-b md:border-b-0 md:border-r border-gray-200">
-                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                <input type="text" placeholder="All Cities" class="w-full py-3 focus:outline-none text-gray-700 bg-transparent">
+
+            <!-- Location (State + City search) -->
+            <div class="flex-1 flex items-center px-5 border-b md:border-b-0 md:border-r border-gray-100 py-1 hero-location-wrap" id="hero-location-container">
+                <!-- JS widget will inject here -->
             </div>
-            <div class="flex-1 w-full flex items-center px-4">
-                <select class="w-full py-3 focus:outline-none text-gray-500 bg-transparent appearance-none">
-                    <option>Category</option>
-                    <option>Restaurants</option>
-                    <option>Automotive</option>
-                </select>
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+
+            <!-- Category -->
+            <div class="flex-1 flex items-center px-5 py-1 hero-cat-wrap" id="hero-category-container">
+                <!-- JS widget will inject here -->
             </div>
-            <button class="w-full md:w-auto bg-teal hover:bg-teal-dark text-white rounded-full px-8 py-3 font-medium transition-colors m-1">
+
+            <button id="hero-search-btn" class="w-full md:w-auto bg-teal hover:bg-teal-dark text-white rounded-full px-8 py-3 font-semibold text-sm transition-colors m-1 flex-shrink-0">
                 Search
             </button>
         </div>
@@ -94,9 +94,15 @@ $landing_categories = [
 <!-- Recent Listings Section -->
 <section class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Recent Listings</h2>
-            <p class="text-gray-600">Discover some of the latest additions to the BizBranches directory.</p>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-12 gap-4">
+            <div class="text-center sm:text-left">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Recent Listings</h2>
+                <p class="text-gray-600">Discover some of the latest additions to the BizBranches directory.</p>
+            </div>
+            <a href="categories.php" class="inline-flex items-center gap-2 self-center sm:self-auto bg-teal hover:bg-teal-dark text-white font-semibold px-6 py-3 rounded-full shadow-md transition-all duration-200 whitespace-nowrap group">
+                See All Listings
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -462,3 +468,59 @@ $landing_categories = [
 </section>
 
 <?php include 'components/footer.php'; ?>
+
+<script src="/js/location-search.js"></script>
+<script>
+(function () {
+  // ─── Categories data from PHP ─────────────────────────────────────
+  var heroCategories = <?php
+    $cats = [
+      'Home Services' => ['Locksmith','Plumbing','Electrical','HVAC','Garage Door','Roofing','Appliance Repair','Pest Control','Solar','EV Charger Installation','Exterior Paint','Bath Remodeling','Kitchen Remodeling','Home Remodeling','Water Damage Restoration','Fire Damage Restoration','Windows','Lawn Care','Mold Removal','Home Security','Porta Potties'],
+      'Legal' => ['Personal Injury Lawyers','Motor Vehicle Accident Lawyers (MVA)','Mass Torts','Immigration Lawyers','Criminal Defense / DUI Lawyers'],
+      'Insurance' => ['Auto Insurance','Home Insurance','Life Insurance','Final Expense','ACA (Health Insurance)'],
+      'Auto' => ['Towing Services','Car Rental'],
+      'Financial' => ['Credit Repair','Debt Settlement','Tax Debt Relief','Personal Loans','Business Loans','Mortgage'],
+      'Travel' => ['Flight Booking / Changes','Hotel Rental'],
+      'Medical' => ['Medicare','Home Care / Caregivers','SSDI'],
+      'Telecom' => ['Tv/Internet services'],
+    ];
+    echo json_encode($cats);
+  ?>;
+
+  // ─── Location Widget ──────────────────────────────────────────────
+  var heroLocation = new BizBranches.LocationSearch({
+    containerId: 'hero-location-container',
+    placeholder: 'All Cities',
+    onChange: function (city, state) { /* reactive */ }
+  });
+
+  // ─── Category Widget ──────────────────────────────────────────────
+  var heroCat = new BizBranches.CategorySearch({
+    containerId: 'hero-category-container',
+    categoriesData: heroCategories,
+    placeholder: 'Category',
+    onChange: function (cat, sub) { /* reactive */ }
+  });
+
+  // ─── Search Button ────────────────────────────────────────────────
+  document.getElementById('hero-search-btn').addEventListener('click', function () {
+    var name = document.getElementById('hero-search-name').value.trim();
+    var loc  = heroLocation.getValue();
+    var cat  = heroCat.getValue();
+
+    var params = new URLSearchParams();
+    if (name) params.set('q', name);
+    if (loc.city)  params.set('location', loc.city);
+    else if (loc.state) params.set('location', loc.state);
+    if (cat.subcategory) params.set('subcategory', cat.subcategory);
+    else if (cat.category) params.set('category', cat.category);
+
+    window.location.href = '/categories.php?' + params.toString();
+  });
+
+  // Allow pressing Enter in the name field too
+  document.getElementById('hero-search-name').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') document.getElementById('hero-search-btn').click();
+  });
+})();
+</script>

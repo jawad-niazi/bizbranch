@@ -1,0 +1,300 @@
+/* ─────────────────────────────────────────────────────────────
+   BizBranches Location & Category Search Widgets — Shared CSS
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Location Widget ── */
+.loc-field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  position: relative;
+}
+
+.loc-state-select {
+  width: 100%;
+  padding: 9px 14px;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #334155;
+  background: #fff;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.loc-state-select:focus {
+  border-color: #368997;
+  box-shadow: 0 0 0 3px rgba(54,137,151,0.12);
+}
+
+.loc-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.loc-pin-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+.loc-pin-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.loc-city-input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #334155;
+  background: #fff;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.loc-city-input:focus {
+  border-color: #368997;
+  box-shadow: 0 0 0 3px rgba(54,137,151,0.12);
+}
+.loc-city-input::placeholder { color: #94a3b8; }
+
+.loc-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.loc-city-item {
+  padding: 9px 16px;
+  font-size: 13px;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.loc-city-item:hover {
+  background: #f0f9fa;
+  color: #368997;
+}
+
+.loc-no-results {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #94a3b8;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.loc-see-more {
+  padding: 10px 16px;
+  font-size: 12px;
+  color: #368997;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  border-top: 1px solid #f1f5f9;
+  transition: background 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.loc-see-more:hover {
+  background: #f0f9fa;
+}
+
+/* Scrollbar for dropdown */
+.loc-dropdown::-webkit-scrollbar { width: 5px; }
+.loc-dropdown::-webkit-scrollbar-track { background: transparent; }
+.loc-dropdown::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+
+/* ── Category Widget ── */
+.cat-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.cat-input {
+  width: 100%;
+  padding: 9px 36px 9px 14px;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #334155;
+  background: #fff;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cat-input:focus {
+  border-color: #368997;
+  box-shadow: 0 0 0 3px rgba(54,137,151,0.12);
+}
+.cat-input::placeholder { color: #94a3b8; }
+
+.cat-chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.cat-chevron svg {
+  width: 16px;
+  height: 16px;
+}
+
+.cat-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+  z-index: 1001;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+.cat-dropdown::-webkit-scrollbar { width: 5px; }
+.cat-dropdown::-webkit-scrollbar-track { background: transparent; }
+.cat-dropdown::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+
+.cat-item {
+  padding: 9px 16px;
+  font-size: 13px;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.cat-item:hover, .cat-item.active {
+  background: #f0f9fa;
+  color: #368997;
+  font-weight: 600;
+}
+.cat-parent {
+  font-weight: 600;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cat-parent::after {
+  content: '›';
+  font-size: 16px;
+  color: #94a3b8;
+}
+.cat-parent.active::after { color: #368997; }
+
+.cat-subs {
+  display: none;
+  padding-left: 8px;
+  border-left: 2px solid #e2e8f0;
+  margin: 0 16px 4px;
+}
+.cat-subs.open { display: block; }
+
+.cat-sub-item {
+  padding: 7px 12px;
+  font-size: 12.5px;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+}
+.cat-sub-item:hover, .cat-sub-item.active {
+  background: #f0f9fa;
+  color: #368997;
+}
+
+/* ── Hero Search Bar Variants ── */
+.hero-loc-state-select {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: #374151;
+  outline: none;
+  padding: 4px 0;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  cursor: pointer;
+}
+.hero-loc-city-input {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: #374151;
+  outline: none;
+  padding: 4px 0;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+.hero-loc-city-input::placeholder { color: #9ca3af; }
+
+/* When used inside hero, override dropdown position */
+.hero-location-wrap .loc-field-wrap {
+  flex-direction: column;
+  gap: 2px;
+}
+.hero-location-wrap .loc-state-select {
+  border: none;
+  border-radius: 0;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  box-shadow: none;
+}
+.hero-location-wrap .loc-city-input {
+  border: none;
+  border-radius: 0;
+  padding: 4px 0 4px 24px;
+  font-size: 13px;
+  background: transparent;
+  box-shadow: none;
+}
+.hero-location-wrap .loc-pin-icon { left: 0; }
+.hero-location-wrap .loc-dropdown {
+  top: calc(100% + 12px);
+  border-radius: 16px;
+}
+
+/* Hero category search variant */
+.hero-cat-wrap .cat-input {
+  border: none;
+  border-radius: 0;
+  padding: 10px 28px 10px 0;
+  font-size: 14px;
+  background: transparent;
+  box-shadow: none;
+  color: #374151;
+}
+.hero-cat-wrap .cat-dropdown {
+  border-radius: 16px;
+  top: calc(100% + 12px);
+}

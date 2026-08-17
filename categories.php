@@ -86,6 +86,9 @@ $default_businesses = [
 
 $all_businesses = !empty($stored_businesses) ? array_merge($stored_businesses, $default_businesses) : $default_businesses;
 $preselected_category = $_GET['category'] ?? '';
+$preselected_location  = $_GET['location']  ?? '';
+$preselected_q         = $_GET['q']         ?? '';
+$preselected_sub       = $_GET['subcategory'] ?? '';
 ?>
 <?php include 'components/header.php'; ?>
 <style>
@@ -118,8 +121,8 @@ $preselected_category = $_GET['category'] ?? '';
       
       <!-- Centered Header Text -->
       <div class="max-w-xl mx-auto space-y-1">
-        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Search & Filter Businesses</h1>
-        <p class="text-xs text-slate-500">Find businesses by main category, specific service, location, or rating</p>
+        <h1 class="text-2xl font-bold text-slate-900">Search Businesses</h1>
+        <p class="text-sm text-slate-500">Find businesses by category, location, or rating</p>
       </div>
 
       <!-- Integrated Search Input & Reset Button Row -->
@@ -158,15 +161,8 @@ $preselected_category = $_GET['category'] ?? '';
           <option value="">All Subcategories</option>
         </select>
 
-        <!-- 3. LOCATION / CITY DROPDOWN -->
-        <select id="filter-city" class="filter-select">
-          <option value="">All Locations</option>
-          <option value="Austin, TX">Austin, TX</option>
-          <option value="Chicago, IL">Chicago, IL</option>
-          <option value="New York, NY">New York, NY</option>
-          <option value="Miami, FL">Miami, FL</option>
-          <option value="London">London</option>
-        </select>
+        <!-- 3. LOCATION — Smart State → City Widget -->
+        <div id="filter-location-widget" style="position:relative;"></div>
 
         <!-- 4. RATING DROPDOWN -->
         <select id="filter-rating" class="filter-select">
@@ -255,99 +251,113 @@ $preselected_category = $_GET['category'] ?? '';
   <?php include 'components/footer.php'; ?>
 
   <!-- JAVASCRIPT DEPENDENT DROPDOWN & REAL-TIME FILTERING -->
+  <script src="/js/location-search.js"></script>
   <script>
     const categoriesTree = <?php echo json_encode($categories_tree); ?>;
 
-    const searchInput = document.getElementById('search-input');
-    const filterCategory = document.getElementById('filter-category');
-    const filterSubcategory = document.getElementById('filter-subcategory');
-    const filterCity = document.getElementById('filter-city');
-    const filterRating = document.getElementById('filter-rating');
-    const resetBtn = document.getElementById('reset-filters');
-    const businessCards = document.querySelectorAll('.business-card');
-    const noResults = document.getElementById('no-results');
-    const resultsCount = document.getElementById('results-count');
+    const searchInput     = document.getElementById('search-input');
+    const filterCategory  = document.getElementById('filter-category');
+    const filterSub       = document.getElementById('filter-subcategory');
+    const filterRating    = document.getElementById('filter-rating');
+    const resetBtn        = document.getElementById('reset-filters');
+    const businessCards   = document.querySelectorAll('.business-card');
+    const noResults       = document.getElementById('no-results');
+    const resultsCount    = document.getElementById('results-count');
 
-    function updateSubcategories() {
+    // ── Location Widget ──────────────────────────────────────────────
+    var filterLocation = new BizBranches.LocationSearch({
+      containerId: 'filter-location-widget',
+      placeholder: 'All Locations',
+      initialCity:  <?php echo json_encode($preselected_location); ?>,
+      onChange: function () { filterListings(); }
+    });
+
+    // ── Subcategory ──────────────────────────────────────────────────
+    function updateSubcategories(preselectSub) {
       const selectedCat = filterCategory.value;
-      filterSubcategory.innerHTML = '<option value="">All Subcategories</option>';
-
+      filterSub.innerHTML = '<option value="">All Subcategories</option>';
       if (selectedCat && categoriesTree[selectedCat]) {
         categoriesTree[selectedCat].forEach(sub => {
           const opt = document.createElement('option');
           opt.value = sub;
           opt.textContent = sub;
-          filterSubcategory.appendChild(opt);
+          if (preselectSub && sub.toLowerCase() === preselectSub.toLowerCase()) opt.selected = true;
+          filterSub.appendChild(opt);
         });
-        filterSubcategory.disabled = false;
+        filterSub.disabled = false;
       } else {
-        filterSubcategory.disabled = true;
+        filterSub.disabled = true;
       }
     }
 
+    // ── Filter ───────────────────────────────────────────────────────
     function filterListings() {
-      const query = searchInput.value.toLowerCase().trim();
-      const selectedCat = filterCategory.value;
-      const selectedSub = filterSubcategory.value;
-      const selectedCity = filterCity.value;
+      const query        = searchInput.value.toLowerCase().trim();
+      const selectedCat  = filterCategory.value;
+      const selectedSub  = filterSub.value;
+      const locVal       = filterLocation.getValue();
+      const locQuery     = (locVal.city || locVal.state || '').toLowerCase();
       const selectedRating = parseFloat(filterRating.value) || 0;
 
       let visibleCount = 0;
 
       businessCards.forEach(card => {
-        const name = card.dataset.name;
+        const name     = card.dataset.name;
         const category = card.dataset.category;
-        const subcategory = card.dataset.subcategory;
-        const city = card.dataset.city.toLowerCase();
-        const rating = parseFloat(card.dataset.rating) || 0;
+        const subcat   = card.dataset.subcategory;
+        const city     = card.dataset.city.toLowerCase();
+        const rating   = parseFloat(card.dataset.rating) || 0;
 
-        const matchesQuery = !query || name.includes(query) || category.toLowerCase().includes(query) || subcategory.toLowerCase().includes(query) || city.includes(query);
+        const matchesQuery    = !query   || name.includes(query) || category.toLowerCase().includes(query) || subcat.toLowerCase().includes(query) || city.includes(query);
         const matchesCategory = !selectedCat || category === selectedCat;
-        const matchesSubcategory = !selectedSub || subcategory.toLowerCase() === selectedSub.toLowerCase();
-        const matchesCity = !selectedCity || card.dataset.city.includes(selectedCity);
-        const matchesRating = rating >= selectedRating;
+        const matchesSub      = !selectedSub || subcat.toLowerCase() === selectedSub.toLowerCase();
+        const matchesCity     = !locQuery || city.includes(locQuery);
+        const matchesRating   = rating >= selectedRating;
 
-        if (matchesQuery && matchesCategory && matchesSubcategory && matchesCity && matchesRating) {
-          card.classList.remove('hidden');
-          visibleCount++;
-        } else {
-          card.classList.add('hidden');
-        }
+        const show = matchesQuery && matchesCategory && matchesSub && matchesCity && matchesRating;
+        card.classList.toggle('hidden', !show);
+        if (show) visibleCount++;
       });
 
-      if (visibleCount === 0) {
-        noResults.classList.remove('hidden');
-        resultsCount.innerText = '0 business branches found';
-      } else {
-        noResults.classList.add('hidden');
-        resultsCount.innerText = `Showing ${visibleCount} business branch${visibleCount > 1 ? 'es' : ''}`;
-      }
+      noResults.classList.toggle('hidden', visibleCount > 0);
+      resultsCount.innerText = visibleCount === 0
+        ? '0 business branches found'
+        : `Showing ${visibleCount} business branch${visibleCount > 1 ? 'es' : ''}`;
     }
 
+    // ── Events ───────────────────────────────────────────────────────
     searchInput.addEventListener('input', filterListings);
 
     filterCategory.addEventListener('change', () => {
-      updateSubcategories();
+      updateSubcategories('');
       filterListings();
     });
-
-    filterSubcategory.addEventListener('change', filterListings);
-    filterCity.addEventListener('change', filterListings);
+    filterSub.addEventListener('change', filterListings);
     filterRating.addEventListener('change', filterListings);
 
     resetBtn.addEventListener('click', () => {
-      searchInput.value = '';
+      searchInput.value    = '';
       filterCategory.value = '';
-      filterCity.value = '';
-      filterRating.value = '0';
-      updateSubcategories();
+      filterRating.value   = '0';
+      updateSubcategories('');
+      filterLocation = new BizBranches.LocationSearch({
+        containerId: 'filter-location-widget',
+        placeholder: 'All Locations',
+        onChange: function () { filterListings(); }
+      });
       filterListings();
     });
 
-    if (filterCategory.value) {
-      updateSubcategories();
+    // ── Pre-select from URL params ────────────────────────────────────
+    (function () {
+      var preQ   = <?php echo json_encode($preselected_q); ?>;
+      var preCat = <?php echo json_encode($preselected_category); ?>;
+      var preSub = <?php echo json_encode($preselected_sub); ?>;
+
+      if (preQ)   { searchInput.value = preQ; }
+      if (preCat) { filterCategory.value = preCat; updateSubcategories(preSub); }
       filterListings();
-    }
+    })();
   </script>
 
 </body>
