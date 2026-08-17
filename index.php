@@ -46,50 +46,78 @@ $landing_categories = [
 ?>
 
 <!-- Hero Section -->
-<section class="relative bg-teal-dark overflow-hidden">
-    <!-- Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-r from-teal-dark to-teal mix-blend-multiply opacity-90 z-10"></div>
-    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 z-0"></div>
-    
-    <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-md">
-            BizBranches: Free US Business Directory
+<section class="relative bg-teal-dark overflow-hidden min-h-screen md:min-h-0">
+    <!-- Background Image -->
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&q=80')] bg-cover bg-center z-0"></div>
+    <!-- Dark teal overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[#0d3d3a]/90 via-[#0d3d3a]/80 to-[#0d3d3a]/95 z-10"></div>
+
+    <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-14 md:py-32 flex flex-col items-center text-center">
+        <!-- Heading -->
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 drop-shadow-md leading-tight max-w-xl">
+            BizBranches: Free US<br class="hidden xs:block"> Business Directory
         </h1>
-        <p class="text-lg md:text-xl text-teal-50 mb-8 max-w-2xl mx-auto">
+        <p class="text-base md:text-xl text-teal-100 mb-8 max-w-lg leading-relaxed">
             Find local businesses by city and category across the US. List your business free—no fees, no credit card.
         </p>
 
+        <!-- ── MOBILE Search Card ── -->
+        <div class="w-full max-w-sm md:hidden bg-white rounded-3xl shadow-2xl p-4 flex flex-col gap-3 mb-6">
+            <!-- Search input -->
+            <div class="flex items-center gap-3 border border-gray-200 rounded-2xl px-4 py-3 bg-white">
+                <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input id="hero-search-name" type="text" placeholder="Search businesses..." class="w-full focus:outline-none text-sm text-gray-700 bg-transparent placeholder-gray-400">
+            </div>
+            <!-- Location widget (state + city injected by JS) -->
+            <div id="hero-location-container" class="hero-location-wrap hero-mobile-loc"></div>
+            <!-- Category widget injected by JS -->
+            <div id="hero-category-container" class="hero-cat-wrap hero-mobile-cat"></div>
+            <!-- Search Button -->
+            <button id="hero-search-btn" class="w-full bg-teal hover:bg-teal-dark text-white rounded-2xl px-6 py-3.5 font-bold text-sm transition-colors flex items-center justify-center gap-2 mt-1 shadow-md">
+                Search
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </button>
+        </div>
 
-        
-        <!-- Search Bar -->
-        <div class="max-w-4xl mx-auto bg-white rounded-full shadow-xl p-2 flex flex-col md:flex-row items-stretch gap-0">
-            <!-- Business Name -->
-            <div class="flex-1 flex items-center px-5 border-b md:border-b-0 md:border-r border-gray-100 py-1">
+        <!-- ── DESKTOP Search Bar (horizontal pill) ── -->
+        <div class="hidden md:flex max-w-4xl w-full mx-auto bg-white rounded-full shadow-xl p-2 flex-row items-stretch gap-0 mb-8">
+            <div class="flex-1 flex items-center px-5 border-r border-gray-100 py-1">
                 <svg class="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <input id="hero-search-name" type="text" placeholder="Search businesses..." class="w-full focus:outline-none text-sm text-gray-700 bg-transparent py-2">
+                <input id="hero-search-name-desktop" type="text" placeholder="Search businesses..." class="w-full focus:outline-none text-sm text-gray-700 bg-transparent py-2">
             </div>
-
-            <!-- Location (State + City search) -->
-            <div class="flex-1 flex items-center px-5 border-b md:border-b-0 md:border-r border-gray-100 py-1 hero-location-wrap" id="hero-location-container">
-                <!-- JS widget will inject here -->
-            </div>
-
-            <!-- Category -->
-            <div class="flex-1 flex items-center px-5 py-1 hero-cat-wrap" id="hero-category-container">
-                <!-- JS widget will inject here -->
-            </div>
-
-            <button id="hero-search-btn" class="w-full md:w-auto bg-teal hover:bg-teal-dark text-white rounded-full px-8 py-3 font-semibold text-sm transition-colors m-1 flex-shrink-0">
+            <div class="flex-1 flex items-center px-5 border-r border-gray-100 py-1 hero-location-wrap" id="hero-location-container-desktop"></div>
+            <div class="flex-1 flex items-center px-5 py-1 hero-cat-wrap" id="hero-category-container-desktop"></div>
+            <button id="hero-search-btn-desktop" class="w-auto bg-teal hover:bg-teal-dark text-white rounded-full px-8 py-3 font-semibold text-sm transition-colors m-1 flex-shrink-0">
                 Search
             </button>
         </div>
-        
-        <div class="mt-8 flex flex-wrap justify-center gap-4">
+
+        <!-- ── CTA Buttons ── -->
+        <!-- Mobile: full-width stacked pill buttons -->
+        <div class="w-full max-w-sm flex flex-col gap-3 md:hidden">
+            <a href="/add-business.php" class="flex items-center justify-between gap-3 w-full bg-[#00b26b] hover:bg-green-600 text-white rounded-2xl px-5 py-4 font-bold text-sm transition-colors shadow-lg">
+                <span class="flex items-center gap-3">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H7"/></svg>
+                    Add Your Business Free
+                </span>
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="/categories.php" class="flex items-center justify-between gap-3 w-full bg-white/10 hover:bg-white/20 border border-white/40 text-white rounded-2xl px-5 py-4 font-bold text-sm transition-colors backdrop-blur-sm">
+                <span class="flex items-center gap-3">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    Browse All Businesses
+                </span>
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+        <!-- Desktop: inline pill buttons -->
+        <div class="hidden md:flex flex-wrap justify-center gap-4">
             <a href="/add-business.php" class="bg-[#00b26b] hover:bg-green-600 text-white rounded-lg px-6 py-3 font-medium transition-colors">Add Your Business Free</a>
             <a href="/categories.php" class="bg-transparent border border-white text-white hover:bg-white/10 rounded-lg px-6 py-3 font-medium transition-colors">Browse All Businesses</a>
         </div>
     </div>
 </section>
+
 
 <!-- Recent Listings Section -->
 <section class="py-20 bg-gray-50">
@@ -99,9 +127,9 @@ $landing_categories = [
                 <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Recent Listings</h2>
                 <p class="text-gray-600">Discover some of the latest additions to the BizBranches directory.</p>
             </div>
-            <a href="categories.php" class="inline-flex items-center gap-2 self-center sm:self-auto bg-teal hover:bg-teal-dark text-white font-semibold px-6 py-3 rounded-full shadow-md transition-all duration-200 whitespace-nowrap group">
+            <a href="categories.php" class="inline-flex items-center gap-1.5 self-center sm:self-auto bg-teal hover:bg-teal-dark text-white font-semibold text-xs px-4 py-2 rounded-full shadow-md transition-all duration-200 whitespace-nowrap group">
                 See All Listings
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
         </div>
         
@@ -232,8 +260,9 @@ $landing_categories = [
       <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Explore Top Categories</h2>
       <p class="text-xs text-slate-500 mt-1">Find local specialists and verified business branches</p>
     </div>
-    <a href="categories.php" class="text-xs font-bold text-blue-600 hover:underline">
-      View All Categories &rarr;
+    <a href="categories.php" class="inline-flex items-center gap-1.5 bg-teal hover:bg-teal-dark text-white font-semibold text-xs px-4 py-2 rounded-full shadow-md transition-all duration-200 whitespace-nowrap group">
+      View All Categories
+      <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
     </a>
   </div>
 
