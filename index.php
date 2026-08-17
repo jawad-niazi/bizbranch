@@ -498,6 +498,61 @@ $landing_categories = [
 
 <?php include 'components/footer.php'; ?>
 
+<style>
+/* ── Mobile hero search card field overrides ── */
+.hero-mobile-loc .loc-field-wrap {
+  flex-direction: column;
+  gap: 0;
+}
+.hero-mobile-loc .loc-state-select {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #fff;
+  color: #374151;
+  width: 100%;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+.hero-mobile-loc .loc-city-input {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 12px 16px 12px 38px;
+  font-size: 14px;
+  background: #fff;
+  color: #374151;
+  width: 100%;
+  outline: none;
+  margin-top: 10px;
+}
+.hero-mobile-loc .loc-city-input::placeholder { color: #9ca3af; }
+.hero-mobile-loc .loc-pin-icon { left: 14px; top: calc(50% + 5px); }
+.hero-mobile-loc .loc-dropdown { border-radius: 16px; z-index: 200; }
+
+.hero-mobile-cat .cat-input {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 12px 40px 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #fff;
+  color: #374151;
+  width: 100%;
+  outline: none;
+}
+.hero-mobile-cat .cat-input::placeholder { color: #9ca3af; }
+.hero-mobile-cat .cat-chevron { right: 14px; }
+.hero-mobile-cat .cat-dropdown { border-radius: 16px; z-index: 200; }
+</style>
+
 <script src="/js/location-search.js"></script>
 <script>
 (function () {
@@ -516,40 +571,75 @@ $landing_categories = [
     echo json_encode($cats);
   ?>;
 
-  // ─── Location Widget ──────────────────────────────────────────────
-  var heroLocation = new BizBranches.LocationSearch({
+  // ─── Mobile Widgets ───────────────────────────────────────────────
+  var mobileLocation = new BizBranches.LocationSearch({
     containerId: 'hero-location-container',
     placeholder: 'All Cities',
-    onChange: function (city, state) { /* reactive */ }
+    onChange: function (city, state) {}
   });
 
-  // ─── Category Widget ──────────────────────────────────────────────
-  var heroCat = new BizBranches.CategorySearch({
+  var mobileCat = new BizBranches.CategorySearch({
     containerId: 'hero-category-container',
     categoriesData: heroCategories,
     placeholder: 'Category',
-    onChange: function (cat, sub) { /* reactive */ }
+    onChange: function (cat, sub) {}
   });
 
-  // ─── Search Button ────────────────────────────────────────────────
-  document.getElementById('hero-search-btn').addEventListener('click', function () {
-    var name = document.getElementById('hero-search-name').value.trim();
-    var loc  = heroLocation.getValue();
-    var cat  = heroCat.getValue();
+  // ─── Desktop Widgets ──────────────────────────────────────────────
+  var desktopLocation = new BizBranches.LocationSearch({
+    containerId: 'hero-location-container-desktop',
+    placeholder: 'All Cities',
+    onChange: function (city, state) {}
+  });
 
+  var desktopCat = new BizBranches.CategorySearch({
+    containerId: 'hero-category-container-desktop',
+    categoriesData: heroCategories,
+    placeholder: 'Category',
+    onChange: function (cat, sub) {}
+  });
+
+  // ─── Search helper ────────────────────────────────────────────────
+  function doSearch(nameInputId, locWidget, catWidget) {
+    var name = document.getElementById(nameInputId).value.trim();
+    var loc  = locWidget.getValue();
+    var cat  = catWidget.getValue();
     var params = new URLSearchParams();
     if (name) params.set('q', name);
     if (loc.city)  params.set('location', loc.city);
     else if (loc.state) params.set('location', loc.state);
     if (cat.subcategory) params.set('subcategory', cat.subcategory);
     else if (cat.category) params.set('category', cat.category);
-
     window.location.href = '/categories.php?' + params.toString();
-  });
+  }
 
-  // Allow pressing Enter in the name field too
-  document.getElementById('hero-search-name').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') document.getElementById('hero-search-btn').click();
-  });
+  // ─── Mobile Search Button ─────────────────────────────────────────
+  var mobileBtn = document.getElementById('hero-search-btn');
+  if (mobileBtn) {
+    mobileBtn.addEventListener('click', function () {
+      doSearch('hero-search-name', mobileLocation, mobileCat);
+    });
+  }
+  var mobileInput = document.getElementById('hero-search-name');
+  if (mobileInput) {
+    mobileInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') mobileBtn && mobileBtn.click();
+    });
+  }
+
+  // ─── Desktop Search Button ────────────────────────────────────────
+  var desktopBtn = document.getElementById('hero-search-btn-desktop');
+  if (desktopBtn) {
+    desktopBtn.addEventListener('click', function () {
+      doSearch('hero-search-name-desktop', desktopLocation, desktopCat);
+    });
+  }
+  var desktopInput = document.getElementById('hero-search-name-desktop');
+  if (desktopInput) {
+    desktopInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') desktopBtn && desktopBtn.click();
+    });
+  }
 })();
 </script>
+
