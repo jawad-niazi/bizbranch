@@ -98,19 +98,100 @@ $preselected_sub       = $_GET['subcategory'] ?? '';
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     transition: all 0.25s ease;
   }
-  .filter-select {
-    background-color: #FFFFFF;
-    border: 1px solid #CBD5E1;
-    border-radius: 1rem; /* 2xl rounded */
-    padding: 0.625rem 0.875rem;
-    font-size: 0.8125rem;
-    color: #334155;
-    outline: none;
-    transition: all 0.2s;
+  /* ── Custom Filter Dropdown ── */
+  .csel-wrap {
+    position: relative;
+    width: 100%;
   }
-  .filter-select:focus {
-    border-color: #368997;
-    box-shadow: 0 0 0 3px rgba(54, 137, 151, 0.1);
+  .csel-btn {
+    width: 100%;
+    padding: 9px 36px 9px 14px;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    font-size: 13px;
+    color: #334155;
+    background: #fff;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    text-align: left;
+  }
+  .csel-btn:hover { border-color: #368997; }
+  .csel-btn.disabled-look {
+    background: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .csel-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+  .csel-chevron {
+    width: 16px;
+    height: 16px;
+    color: #94a3b8;
+    flex-shrink: 0;
+    margin-left: 6px;
+    transition: transform 0.2s ease;
+  }
+  .csel-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+    z-index: 1001;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 6px 0;
+    display: none;
+  }
+  .csel-dropdown::-webkit-scrollbar { width: 5px; }
+  .csel-dropdown::-webkit-scrollbar-track { background: transparent; }
+  .csel-dropdown::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+  .csel-item {
+    padding: 9px 16px;
+    font-size: 13px;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .csel-item:hover, .csel-item.active {
+    background: #f0f9fa;
+    color: #368997;
+    font-weight: 600;
+  }
+  /* Mobile: fixed positioning */
+  @media (max-width: 767px) {
+    .csel-dropdown {
+      position: fixed !important;
+      left: 12px !important;
+      right: 12px !important;
+      width: auto !important;
+      max-width: calc(100vw - 24px) !important;
+      max-height: 50vh !important;
+      overflow-y: auto !important;
+      z-index: 9999 !important;
+      border-radius: 20px !important;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.18) !important;
+    }
+    .csel-btn {
+      border-radius: 16px !important;
+      padding: 12px 40px 12px 16px !important;
+      font-size: 14px !important;
+    }
   }
 </style>
 
@@ -137,40 +218,32 @@ $preselected_sub       = $_GET['subcategory'] ?? '';
           <svg class="w-4 h-4 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
 
-        <button id="reset-filters" class="w-full sm:w-auto text-xs text-slate-600 hover:text-teal font-bold flex justify-center items-center gap-1.5 transition whitespace-nowrap px-6 py-3 rounded-full border border-slate-200 hover:border-teal/30 hover:bg-teal/5 bg-white">
+        <button id="reset-filters" class="w-full sm:w-auto text-xs text-slate-600 hover:text-teal font-bold flex justify-center items-center gap-1.5 transition whitespace-nowrap px-5 py-3 rounded-full border border-slate-200 hover:border-teal/30 hover:bg-teal/5 bg-white">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
           <span>Reset</span>
+        </button>
+
+        <!-- Search Button -->
+        <button id="search-btn" class="w-full sm:w-auto text-xs text-white font-bold flex justify-center items-center gap-1.5 transition whitespace-nowrap px-6 py-3 rounded-full bg-teal hover:bg-teal-dark shadow-md shadow-teal/20">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <span>Search</span>
         </button>
       </div>
 
       <!-- FILTER DROPDOWNS ROW -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-left max-w-5xl mx-auto pt-2">
         
-        <!-- 1. MAIN CATEGORY DROPDOWN -->
-        <select id="filter-category" class="filter-select">
-          <option value="">All Categories</option>
-          <?php foreach(array_keys($categories_tree) as $cat): ?>
-            <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo $preselected_category === $cat ? 'selected' : ''; ?>>
-              <?php echo htmlspecialchars($cat); ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
+        <!-- 1. CATEGORY custom dropdown -->
+        <div id="filter-category-widget" class="csel-wrap"></div>
 
-        <!-- 2. DEPENDENT SUBCATEGORY DROPDOWN -->
-        <select id="filter-subcategory" class="filter-select disabled:bg-slate-50 disabled:text-slate-400" disabled>
-          <option value="">All Subcategories</option>
-        </select>
+        <!-- 2. SUBCATEGORY custom dropdown -->
+        <div id="filter-subcategory-widget" class="csel-wrap"></div>
 
         <!-- 3. LOCATION — Smart State → City Widget -->
         <div id="filter-location-widget" style="position:relative;"></div>
 
-        <!-- 4. RATING DROPDOWN -->
-        <select id="filter-rating" class="filter-select">
-          <option value="0">All Ratings</option>
-          <option value="4.5">4.5+ Stars</option>
-          <option value="4.8">4.8+ Stars</option>
-          <option value="5.0">5.0 Stars Only</option>
-        </select>
+        <!-- 4. RATING custom dropdown -->
+        <div id="filter-rating-widget" class="csel-wrap"></div>
 
       </div>
     </div>
@@ -255,49 +328,193 @@ $preselected_sub       = $_GET['subcategory'] ?? '';
   <script>
     const categoriesTree = <?php echo json_encode($categories_tree); ?>;
 
-    const searchInput     = document.getElementById('search-input');
-    const filterCategory  = document.getElementById('filter-category');
-    const filterSub       = document.getElementById('filter-subcategory');
-    const filterRating    = document.getElementById('filter-rating');
-    const resetBtn        = document.getElementById('reset-filters');
-    const businessCards   = document.querySelectorAll('.business-card');
-    const noResults       = document.getElementById('no-results');
-    const resultsCount    = document.getElementById('results-count');
+    const searchInput   = document.getElementById('search-input');
+    const resetBtn      = document.getElementById('reset-filters');
+    const searchBtn     = document.getElementById('search-btn');
+    const businessCards = document.querySelectorAll('.business-card');
+    const noResults     = document.getElementById('no-results');
+    const resultsCount  = document.getElementById('results-count');
 
-    // ── Location Widget ──────────────────────────────────────────────
-    var filterLocation = new BizBranches.LocationSearch({
-      containerId: 'filter-location-widget',
-      placeholder: 'All Locations',
-      initialCity:  <?php echo json_encode($preselected_location); ?>,
-      onChange: function () { filterListings(); }
-    });
+    // ────────────────────────────────────────────────────────────
+    // CustomSelect — reusable custom dropdown widget
+    // ────────────────────────────────────────────────────────────
+    class CustomSelect {
+      constructor({ containerId, options, placeholder = 'Select', onChange, disabled = false }) {
+        this.containerId = containerId;
+        this.options     = options;   // [{value, label}]
+        this.placeholder = placeholder;
+        this.onChange    = onChange;
+        this.disabled    = disabled;
+        this.selected    = { value: '', label: placeholder };
+        this.isOpen      = false;
+        this._render();
+        this._bind();
+      }
 
-    // ── Subcategory ──────────────────────────────────────────────────
-    function updateSubcategories(preselectSub) {
-      const selectedCat = filterCategory.value;
-      filterSub.innerHTML = '<option value="">All Subcategories</option>';
-      if (selectedCat && categoriesTree[selectedCat]) {
-        categoriesTree[selectedCat].forEach(sub => {
-          const opt = document.createElement('option');
-          opt.value = sub;
-          opt.textContent = sub;
-          if (preselectSub && sub.toLowerCase() === preselectSub.toLowerCase()) opt.selected = true;
-          filterSub.appendChild(opt);
+      _render() {
+        const c = document.getElementById(this.containerId);
+        if (!c) return;
+
+        const chevronSVG = `<svg class="csel-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>`;
+
+        const btn = document.createElement('div');
+        btn.className = 'csel-btn' + (this.disabled ? ' disabled-look' : '');
+        btn.innerHTML = `<span class="csel-label">${this.placeholder}</span>${chevronSVG}`;
+
+        const dropdown = document.createElement('div');
+        dropdown.className = 'csel-dropdown';
+
+        c.innerHTML = '';
+        c.appendChild(btn);
+        c.appendChild(dropdown);
+        this.el = { btn, dropdown, label: btn.querySelector('.csel-label'), chevron: btn.querySelector('.csel-chevron') };
+
+        this._renderItems();
+      }
+
+      _renderItems() {
+        this.el.dropdown.innerHTML = this.options.map(o =>
+          `<div class="csel-item${this.selected.value === o.value ? ' active' : ''}" data-value="${o.value}">${o.label}</div>`
+        ).join('');
+
+        this.el.dropdown.querySelectorAll('.csel-item').forEach(item => {
+          item.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const val = item.dataset.value;
+            this.selected = this.options.find(o => o.value === val) || { value: val, label: item.textContent };
+            this.el.label.textContent = this.selected.label;
+            this._close();
+            if (typeof this.onChange === 'function') this.onChange(this.selected.value);
+          });
         });
-        filterSub.disabled = false;
-      } else {
-        filterSub.disabled = true;
+      }
+
+      _bind() {
+        this.el.btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (this.disabled) return;
+          this.isOpen ? this._close() : this._open();
+        });
+        document.addEventListener('click', (e) => {
+          const c = document.getElementById(this.containerId);
+          if (c && !c.contains(e.target)) this._close();
+        });
+      }
+
+      _open() {
+        this.el.dropdown.style.display = 'block';
+        this.el.chevron.style.transform = 'rotate(180deg)';
+        this.isOpen = true;
+        // Mobile: anchor below the button
+        if (window.innerWidth < 768) {
+          const rect = this.el.btn.getBoundingClientRect();
+          this.el.dropdown.style.top = (rect.bottom + 6) + 'px';
+        }
+      }
+
+      _close() {
+        this.el.dropdown.style.display = 'none';
+        this.el.chevron.style.transform = '';
+        this.isOpen = false;
+      }
+
+      getValue() { return this.selected.value; }
+
+      setOptions(options, placeholder, disabled) {
+        this.options     = options;
+        this.placeholder = placeholder ?? this.placeholder;
+        this.disabled    = disabled ?? false;
+        this.selected    = { value: '', label: this.placeholder };
+        this.el.label.textContent = this.placeholder;
+        this.el.btn.classList.toggle('disabled-look', this.disabled);
+        this._renderItems();
+        this._close();
+      }
+
+      reset() {
+        this.selected = { value: '', label: this.placeholder };
+        this.el.label.textContent = this.placeholder;
+        this._renderItems();
+        this._close();
       }
     }
 
-    // ── Filter ───────────────────────────────────────────────────────
+    // ── Build category options ────────────────────────────────────
+    const categoryOptions = [
+      { value: '', label: 'All Categories' },
+      ...Object.keys(categoriesTree).map(c => ({ value: c, label: c }))
+    ];
+
+    const ratingOptions = [
+      { value: '0',   label: '⭐ All Ratings' },
+      { value: '4.5', label: '⭐ 4.5+ Stars'  },
+      { value: '4.8', label: '⭐ 4.8+ Stars'  },
+      { value: '5.0', label: '⭐ 5.0 Stars Only' }
+    ];
+
+    // ── Instantiate custom selects ────────────────────────────────
+    const catWidget = new CustomSelect({
+      containerId: 'filter-category-widget',
+      options: categoryOptions,
+      placeholder: 'All Categories',
+      onChange: (val) => {
+        updateSubWidget(val, '');
+        filterListings();
+      }
+    });
+
+    let subWidget = new CustomSelect({
+      containerId: 'filter-subcategory-widget',
+      options: [{ value: '', label: 'All Subcategories' }],
+      placeholder: 'All Subcategories',
+      disabled: true,
+      onChange: () => filterListings()
+    });
+
+    const ratingWidget = new CustomSelect({
+      containerId: 'filter-rating-widget',
+      options: ratingOptions,
+      placeholder: '⭐ All Ratings',
+      onChange: () => filterListings()
+    });
+
+    // ── Location Widget ───────────────────────────────────────────
+    var filterLocation = new BizBranches.LocationSearch({
+      containerId: 'filter-location-widget',
+      placeholder: 'All Locations',
+      initialCity: <?php echo json_encode($preselected_location); ?>,
+      onChange: function () { filterListings(); }
+    });
+
+    // ── Update subcategory options when category changes ──────────
+    function updateSubWidget(cat, preselectSub) {
+      if (cat && categoriesTree[cat]) {
+        const subs = [
+          { value: '', label: 'All Subcategories' },
+          ...categoriesTree[cat].map(s => ({ value: s, label: s }))
+        ];
+        subWidget.setOptions(subs, 'All Subcategories', false);
+        if (preselectSub) {
+          const match = subs.find(s => s.value.toLowerCase() === preselectSub.toLowerCase());
+          if (match) {
+            subWidget.selected = match;
+            subWidget.el.label.textContent = match.label;
+            subWidget._renderItems();
+          }
+        }
+      } else {
+        subWidget.setOptions([{ value: '', label: 'All Subcategories' }], 'All Subcategories', true);
+      }
+    }
+
+    // ── Filter logic ──────────────────────────────────────────────
     function filterListings() {
-      const query        = searchInput.value.toLowerCase().trim();
-      const selectedCat  = filterCategory.value;
-      const selectedSub  = filterSub.value;
-      const locVal       = filterLocation.getValue();
-      const locQuery     = (locVal.city || locVal.state || '').toLowerCase();
-      const selectedRating = parseFloat(filterRating.value) || 0;
+      const query          = searchInput.value.toLowerCase().trim();
+      const selectedCat    = catWidget.getValue();
+      const selectedSub    = subWidget.getValue();
+      const locVal         = filterLocation.getValue();
+      const locQuery       = (locVal.city || locVal.state || '').toLowerCase();
+      const selectedRating = parseFloat(ratingWidget.getValue()) || 0;
 
       let visibleCount = 0;
 
@@ -308,10 +525,10 @@ $preselected_sub       = $_GET['subcategory'] ?? '';
         const city     = card.dataset.city.toLowerCase();
         const rating   = parseFloat(card.dataset.rating) || 0;
 
-        const matchesQuery    = !query   || name.includes(query) || category.toLowerCase().includes(query) || subcat.toLowerCase().includes(query) || city.includes(query);
-        const matchesCategory = !selectedCat || category === selectedCat;
-        const matchesSub      = !selectedSub || subcat.toLowerCase() === selectedSub.toLowerCase();
-        const matchesCity     = !locQuery || city.includes(locQuery);
+        const matchesQuery    = !query          || name.includes(query) || category.toLowerCase().includes(query) || subcat.toLowerCase().includes(query) || city.includes(query);
+        const matchesCategory = !selectedCat    || category === selectedCat;
+        const matchesSub      = !selectedSub    || subcat.toLowerCase() === selectedSub.toLowerCase();
+        const matchesCity     = !locQuery       || city.includes(locQuery);
         const matchesRating   = rating >= selectedRating;
 
         const show = matchesQuery && matchesCategory && matchesSub && matchesCity && matchesRating;
@@ -325,21 +542,16 @@ $preselected_sub       = $_GET['subcategory'] ?? '';
         : `Showing ${visibleCount} business branch${visibleCount > 1 ? 'es' : ''}`;
     }
 
-    // ── Events ───────────────────────────────────────────────────────
+    // ── Events ────────────────────────────────────────────────────
     searchInput.addEventListener('input', filterListings);
-
-    filterCategory.addEventListener('change', () => {
-      updateSubcategories('');
-      filterListings();
-    });
-    filterSub.addEventListener('change', filterListings);
-    filterRating.addEventListener('change', filterListings);
+    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') filterListings(); });
+    if (searchBtn) searchBtn.addEventListener('click', filterListings);
 
     resetBtn.addEventListener('click', () => {
-      searchInput.value    = '';
-      filterCategory.value = '';
-      filterRating.value   = '0';
-      updateSubcategories('');
+      searchInput.value = '';
+      catWidget.reset();
+      subWidget.setOptions([{ value: '', label: 'All Subcategories' }], 'All Subcategories', true);
+      ratingWidget.reset();
       filterLocation = new BizBranches.LocationSearch({
         containerId: 'filter-location-widget',
         placeholder: 'All Locations',
@@ -348,17 +560,23 @@ $preselected_sub       = $_GET['subcategory'] ?? '';
       filterListings();
     });
 
-    // ── Pre-select from URL params ────────────────────────────────────
+    // ── Pre-select from URL params ────────────────────────────────
     (function () {
-      var preQ   = <?php echo json_encode($preselected_q); ?>;
       var preCat = <?php echo json_encode($preselected_category); ?>;
       var preSub = <?php echo json_encode($preselected_sub); ?>;
+      var preQ   = <?php echo json_encode($preselected_q); ?>;
 
-      if (preQ)   { searchInput.value = preQ; }
-      if (preCat) { filterCategory.value = preCat; updateSubcategories(preSub); }
+      if (preQ) searchInput.value = preQ;
+      if (preCat) {
+        catWidget.selected = { value: preCat, label: preCat };
+        catWidget.el.label.textContent = preCat;
+        catWidget._renderItems();
+        updateSubWidget(preCat, preSub);
+      }
       filterListings();
     })();
   </script>
 
 </body>
 </html>
+

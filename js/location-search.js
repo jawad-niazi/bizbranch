@@ -1,7 +1,7 @@
 /**
  * BizBranches Location Search Widget
- * Provides state → city hierarchical dropdown + search-as-you-type with pagination
- * Usage: new LocationSearch(config)
+ * Custom state → city hierarchical dropdown (no native <select>)
+ * Usage: new BizBranches.LocationSearch(config)
  */
 (function (window) {
   'use strict';
@@ -20,17 +20,16 @@
     return _citiesData;
   }
 
-  // ─── LocationSearch Class ─────────────────────────────────────────────────────
+  // ─── Helper: position a fixed dropdown below a trigger element ───────────────
+  function positionDropdown(dropdown, triggerEl) {
+    const rect = triggerEl.getBoundingClientRect();
+    dropdown.style.top  = (rect.bottom + 6) + 'px';
+    dropdown.style.left = '12px';
+    dropdown.style.right = '12px';
+  }
+
+  // ─── LocationSearch Class ────────────────────────────────────────────────────
   class LocationSearch {
-    /**
-     * @param {Object} config
-     * @param {string} config.containerId   - ID of the wrapper <div>
-     * @param {string} [config.placeholder] - Input placeholder text
-     * @param {function} [config.onChange]  - Callback(selectedCity, selectedState)
-     * @param {string} [config.inputClass]  - Extra classes for the text input
-     * @param {string} [config.initialState]  - Pre-selected state
-     * @param {string} [config.initialCity]   - Pre-selected city
-     */
     constructor(config) {
       this.cfg = Object.assign({
         placeholder: 'All Cities',
@@ -43,25 +42,27 @@
       this.selectedState = this.cfg.initialState;
       this.selectedCity  = this.cfg.initialCity;
       this.displayedCount = 20;
-      this.isOpen = false;
-      this.data = {};
+      this.stateOpen = false;
+      this.cityOpen  = false;
+      this.data   = {};
+      this.states = [];
       this.filteredCities = [];
+      this.filteredStates = [];
 
       this._init();
     }
 
     async _init() {
-      this.data = await loadCitiesData();
+      this.data   = await loadCitiesData();
       this.states = Object.keys(this.data).sort();
       this._render();
       this._bindEvents();
 
-      // Restore pre-selected values
       if (this.cfg.initialState) {
-        this.elements.stateSelect.value = this.cfg.initialState;
-        this._onStateChange();
+        this.selectedState = this.cfg.initialState;
+        this._updateStateTrigger();
         if (this.cfg.initialCity) {
-          this.elements.input.value = this.cfg.initialCity;
+          this.elements.cityInput.value = this.cfg.initialCity;
           this.selectedCity = this.cfg.initialCity;
         }
       }
@@ -72,98 +73,167 @@
       if (!c) return;
       c.style.position = 'relative';
 
-      // State select
-      const stateSelect = document.createElement('select');
-      stateSelect.className = 'loc-state-select';
-      stateSelect.innerHTML = `<option value="">All States</option>` +
-        this.states.map(s => `<option value="${s}">${s}</option>`).join('');
+      // ── State trigger button ──────────────────────────────────────
+      const stateTrigger = document.createElement('div');
+      stateTrigger.className = 'loc-state-btn';
+      stateTrigger.innerHTML = `
+        <span class="loc-state-label">All States</span>
+        <svg class="loc-state-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>`;
 
-      // City search input
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.placeholder = this.cfg.placeholder;
-      input.className = 'loc-city-input ' + (this.cfg.inputClass || '');
-      input.autocomplete = 'off';
+      // ── State dropdown ────────────────────────────────────────────
+      const stateDropdown = document.createElement('div');
+      stateDropdown.className = 'loc-dropdown loc-state-dropdown';
+      stateDropdown.style.display = 'none';
+      // Render state list
+      this._renderStateDropdown(stateDropdown);
+
+      // ── City search input ─────────────────────────────────────────
+      const cityInput = document.createElement('input');
+      cityInput.type = 'text';
+      cityInput.placeholder = this.cfg.placeholder;
+      cityInput.className = 'loc-city-input ' + (this.cfg.inputClass || '');
+      cityInput.autocomplete = 'off';
 
       // Pin icon
       const icon = document.createElement('span');
       icon.className = 'loc-pin-icon';
       icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`;
 
-      // Dropdown panel
-      const dropdown = document.createElement('div');
-      dropdown.className = 'loc-dropdown';
-      dropdown.style.display = 'none';
-
       const inputWrap = document.createElement('div');
       inputWrap.className = 'loc-input-wrap';
       inputWrap.appendChild(icon);
-      inputWrap.appendChild(input);
+      inputWrap.appendChild(cityInput);
 
+      // ── City dropdown ─────────────────────────────────────────────
+      const cityDropdown = document.createElement('div');
+      cityDropdown.className = 'loc-dropdown loc-city-dropdown';
+      cityDropdown.style.display = 'none';
+
+      // ── Field wrapper ─────────────────────────────────────────────
       const fieldWrap = document.createElement('div');
       fieldWrap.className = 'loc-field-wrap';
-      fieldWrap.appendChild(stateSelect);
+      fieldWrap.appendChild(stateTrigger);
+      fieldWrap.appendChild(stateDropdown);
       fieldWrap.appendChild(inputWrap);
-      fieldWrap.appendChild(dropdown);
+      fieldWrap.appendChild(cityDropdown);
 
       c.innerHTML = '';
       c.appendChild(fieldWrap);
 
-      this.elements = { stateSelect, input, dropdown, fieldWrap };
+      this.elements = { stateTrigger, stateDropdown, cityInput, cityDropdown, fieldWrap, icon };
+    }
+
+    _renderStateDropdown(dropdown) {
+      const states = this.states;
+      let html = `<div class="loc-city-item loc-state-item" data-state="">All States</div>`;
+      html += states.map(s =>
+        `<div class="loc-city-item loc-state-item" data-state="${s}">${s}</div>`
+      ).join('');
+      dropdown.innerHTML = html;
+
+      dropdown.querySelectorAll('.loc-state-item').forEach(el => {
+        el.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          const state = el.dataset.state;
+          this.selectedState = state;
+          this.selectedCity  = '';
+          this.elements.cityInput.value = '';
+          this.displayedCount = 20;
+          this._updateStateTrigger();
+          this._closeStateDropdown();
+          if (state) {
+            this._openCityDropdown();
+          } else {
+            this._closeCityDropdown();
+          }
+          this._emit();
+        });
+      });
+    }
+
+    _updateStateTrigger() {
+      const label = this.elements.stateTrigger.querySelector('.loc-state-label');
+      if (label) label.textContent = this.selectedState || 'All States';
     }
 
     _bindEvents() {
-      const { stateSelect, input, dropdown } = this.elements;
+      const { stateTrigger, stateDropdown, cityInput, cityDropdown, fieldWrap } = this.elements;
 
-      stateSelect.addEventListener('change', () => this._onStateChange());
-      input.addEventListener('focus', () => this._openDropdown());
-      input.addEventListener('input', () => {
+      // State trigger toggle
+      stateTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this.stateOpen) {
+          this._closeStateDropdown();
+        } else {
+          this._closeCityDropdown();
+          this._openStateDropdown();
+        }
+      });
+
+      // City input focus → open city dropdown
+      cityInput.addEventListener('focus', () => {
+        this._closeStateDropdown();
+        this._openCityDropdown();
+      });
+
+      cityInput.addEventListener('input', () => {
         this.displayedCount = 20;
-        this._renderDropdown();
+        this._renderCityDropdown();
       });
 
       // Close on outside click
       document.addEventListener('click', (e) => {
-        if (!this.elements.fieldWrap.contains(e.target)) {
-          this._closeDropdown();
+        if (!fieldWrap.contains(e.target) &&
+            !stateDropdown.contains(e.target) &&
+            !cityDropdown.contains(e.target)) {
+          this._closeStateDropdown();
+          this._closeCityDropdown();
         }
       });
     }
 
-    _onStateChange() {
-      const state = this.elements.stateSelect.value;
-      this.selectedState = state;
-      this.selectedCity = '';
-      this.elements.input.value = '';
-      this.displayedCount = 20;
-      this.filteredCities = state ? (this.data[state] || []) : [];
-      if (state) {
-        this._openDropdown();
-      } else {
-        this._closeDropdown();
+    // ── State dropdown open/close ─────────────────────────────────
+    _openStateDropdown() {
+      const d = this.elements.stateDropdown;
+      d.style.display = 'block';
+      this.stateOpen = true;
+      if (window.innerWidth < 768) {
+        positionDropdown(d, this.elements.stateTrigger);
       }
-      this._emit();
+      this.elements.stateTrigger.querySelector('.loc-state-chevron').style.transform = 'rotate(180deg)';
     }
 
-    _openDropdown() {
-      const state = this.selectedState;
-      this.filteredCities = state ? (this.data[state] || []) : this._allCities();
-      this._renderDropdown();
-      this.elements.dropdown.style.display = 'block';
-      this.isOpen = true;
+    _closeStateDropdown() {
+      this.elements.stateDropdown.style.display = 'none';
+      this.stateOpen = false;
+      const chev = this.elements.stateTrigger.querySelector('.loc-state-chevron');
+      if (chev) chev.style.transform = '';
     }
 
-    _closeDropdown() {
-      this.elements.dropdown.style.display = 'none';
-      this.isOpen = false;
+    // ── City dropdown open/close ──────────────────────────────────
+    _openCityDropdown() {
+      this._renderCityDropdown();
+      const d = this.elements.cityDropdown;
+      d.style.display = 'block';
+      this.cityOpen = true;
+      if (window.innerWidth < 768) {
+        positionDropdown(d, this.elements.cityInput);
+      }
+    }
+
+    _closeCityDropdown() {
+      this.elements.cityDropdown.style.display = 'none';
+      this.cityOpen = false;
     }
 
     _allCities() {
       return Object.values(this.data).flat();
     }
 
-    _renderDropdown() {
-      const query = this.elements.input.value.trim().toLowerCase();
+    _renderCityDropdown() {
+      const query = this.elements.cityInput.value.trim().toLowerCase();
       const allCities = this.selectedState
         ? (this.data[this.selectedState] || [])
         : this._allCities();
@@ -172,7 +242,7 @@
         ? allCities.filter(c => c.toLowerCase().includes(query))
         : allCities;
 
-      const shown = this.filteredCities.slice(0, this.displayedCount);
+      const shown   = this.filteredCities.slice(0, this.displayedCount);
       const hasMore = this.filteredCities.length > this.displayedCount;
 
       let html = '';
@@ -183,28 +253,29 @@
           `<div class="loc-city-item" data-city="${city}">${city}</div>`
         ).join('');
         if (hasMore) {
-          html += `<div class="loc-see-more">Show more cities (${this.filteredCities.length - this.displayedCount} remaining)</div>`;
+          html += `<div class="loc-see-more">Show more (${this.filteredCities.length - this.displayedCount} remaining)</div>`;
         }
       }
 
-      this.elements.dropdown.innerHTML = html;
+      const d = this.elements.cityDropdown;
+      d.innerHTML = html;
 
-      // City item click
-      this.elements.dropdown.querySelectorAll('.loc-city-item').forEach(el => {
-        el.addEventListener('click', () => {
+      d.querySelectorAll('.loc-city-item').forEach(el => {
+        el.addEventListener('mousedown', (e) => {
+          e.preventDefault();
           this.selectedCity = el.dataset.city;
-          this.elements.input.value = el.dataset.city;
-          this._closeDropdown();
+          this.elements.cityInput.value = el.dataset.city;
+          this._closeCityDropdown();
           this._emit();
         });
       });
 
-      // See more
-      const seeMore = this.elements.dropdown.querySelector('.loc-see-more');
+      const seeMore = d.querySelector('.loc-see-more');
       if (seeMore) {
-        seeMore.addEventListener('click', () => {
+        seeMore.addEventListener('mousedown', (e) => {
+          e.preventDefault();
           this.displayedCount += 20;
-          this._renderDropdown();
+          this._renderCityDropdown();
         });
       }
     }
@@ -222,14 +293,6 @@
 
   // ─── CategorySearch Class ─────────────────────────────────────────────────────
   class CategorySearch {
-    /**
-     * @param {Object} config
-     * @param {string} config.containerId
-     * @param {Object} config.categoriesData  - { 'Category': ['sub1','sub2'] }
-     * @param {function} [config.onChange]    - Callback(category, subcategory)
-     * @param {string} [config.placeholder]
-     * @param {string} [config.inputClass]
-     */
     constructor(config) {
       this.cfg = Object.assign({
         placeholder: 'Category',
@@ -292,7 +355,6 @@
       });
       this.elements.dropdown.innerHTML = html;
 
-      // All categories
       this.elements.dropdown.querySelector('[data-cat=""]').addEventListener('click', () => {
         this.selectedCategory = '';
         this.selectedSub = '';
@@ -302,24 +364,18 @@
         this._emit();
       });
 
-      // Parent category clicks
       this.elements.dropdown.querySelectorAll('.cat-parent').forEach(el => {
         el.addEventListener('click', (e) => {
           e.stopPropagation();
           const cat = el.dataset.cat;
-          if (this.selectedCategory === cat) {
-            this.selectedCategory = '';
-          } else {
-            this.selectedCategory = cat;
-            this.selectedSub = '';
-          }
+          this.selectedCategory = (this.selectedCategory === cat) ? '' : cat;
+          this.selectedSub = '';
           this._renderDropdown();
           this.elements.input.value = this.selectedCategory;
           this._emit();
         });
       });
 
-      // Subcategory clicks
       this.elements.dropdown.querySelectorAll('.cat-sub-item').forEach(el => {
         el.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -340,13 +396,18 @@
         this.isOpen ? this._closeDropdown() : this._openDropdown();
       });
       document.addEventListener('click', (e) => {
-        if (!this.elements.wrap.contains(e.target)) this._closeDropdown();
+        if (!this.elements.wrap.contains(e.target) && !this.elements.dropdown.contains(e.target)) {
+          this._closeDropdown();
+        }
       });
     }
 
     _openDropdown() {
       this.elements.dropdown.style.display = 'block';
       this.isOpen = true;
+      if (window.innerWidth < 768) {
+        positionDropdown(this.elements.dropdown, this.elements.input);
+      }
     }
 
     _closeDropdown() {
